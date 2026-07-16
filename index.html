@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>RückenFit</title>
+<meta name="description" content="Tägliches Rücken-Training abhaken und Wohlbefinden festhalten">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RückenFit">
+<meta name="theme-color" content="#1c7a5a">
+<style>
+  :root {
+    --green: #26a077;
+    --green-dark: #1c7a5a;
+    --bg: #f4f6f5;
+    --card: #ffffff;
+    --text: #1b2b26;
+    --muted: #6b7d76;
+    --line: #e2e8e5;
+    --partial: #f0b429;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101815;
+      --card: #1a2420;
+      --text: #e8efec;
+      --muted: #8fa39b;
+      --line: #2a3833;
+    }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  header {
+    padding: 16px 20px 8px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  header h1 { font-size: 1.5rem; letter-spacing: -0.02em; }
+  header h1 span { color: var(--green); }
+  #headerDate { color: var(--muted); font-size: 0.85rem; }
+
+  main {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 16px 110px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 18px;
+    margin-top: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .card h2 { font-size: 1.05rem; margin-bottom: 4px; }
+  .card .sub { color: var(--muted); font-size: 0.85rem; margin-bottom: 12px; }
+
+  /* Gefühls-Skala */
+  .scale {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .scale button {
+    aspect-ratio: 1;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text);
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  .scale button:active { transform: scale(0.92); }
+  .scale button.sel {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 8px;
+  }
+
+  /* Übungsliste */
+  .exercise {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+  }
+  .exercise:last-child { border-bottom: none; }
+  .checkbox {
+    width: 30px; height: 30px;
+    border: 2px solid var(--line);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .checkbox svg { width: 16px; height: 16px; opacity: 0; }
+  .exercise.done .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .exercise.done .checkbox svg { opacity: 1; }
+  .exercise .name { font-size: 1rem; font-weight: 500; }
+  .exercise.done .name { color: var(--muted); text-decoration: line-through; }
+
+  .progress-wrap { margin-top: 14px; }
+  .progress-bar {
+    height: 8px;
+    background: var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-bar div {
+    height: 100%;
+    background: var(--green);
+    border-radius: 4px;
+    width: 0;
+    transition: width 0.25s;
+  }
+  .progress-text {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+  .all-done {
+    text-align: center;
+    color: var(--green);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-top: 8px;
+  }
+
+  /* Kalender */
+  .cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .cal-nav button {
+    border: none;
+    background: var(--bg);
+    color: var(--text);
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  .cal-nav .month-label { font-weight: 600; font-size: 1.05rem; }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+  }
+  .cal-grid .dow {
+    color: var(--muted);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 0;
+    text-transform: uppercase;
+  }
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    position: relative;
+    cursor: pointer;
+  }
+  .cal-day.other { visibility: hidden; }
+  .cal-day.today { outline: 2px solid var(--green); outline-offset: -2px; }
+  .cal-day .num { font-weight: 500; line-height: 1.1; }
+  .cal-day .feel {
+    font-size: 0.6rem;
+    color: var(--muted);
+    line-height: 1.2;
+  }
+  .cal-day.full { background: var(--green); color: #fff; }
+  .cal-day.full .feel { color: rgba(255,255,255,0.85); }
+  .cal-day.partial { background: color-mix(in srgb, var(--partial) 30%, transparent); }
+  .cal-day.sel { box-shadow: inset 0 0 0 2px var(--text); }
+  .legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .legend i {
+    width: 12px; height: 12px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .legend i.full { background: var(--green); }
+  .legend i.partial { background: color-mix(in srgb, var(--partial) 45%, transparent); }
+  #dayDetail {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: 0.9rem;
+    display: none;
+  }
+  #dayDetail.show { display: block; }
+  #dayDetail h3 { font-size: 0.95rem; margin-bottom: 6px; }
+  #dayDetail ul { list-style: none; }
+  #dayDetail li { padding: 3px 0; color: var(--muted); }
+  #dayDetail li.ok { color: var(--text); }
+  #dayDetail li.ok::before { content: "✓ "; color: var(--green); font-weight: 700; }
+  #dayDetail li.miss::before { content: "– "; }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .stat {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .stat .val { font-size: 1.3rem; font-weight: 700; color: var(--green); }
+  .stat .lbl { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+
+  /* Tabs */
+  nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--card);
+    border-top: 1px solid var(--line);
+    display: flex;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  nav button {
+    flex: 1;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 12px 0 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  nav button svg { width: 24px; height: 24px; }
+  nav button.active { color: var(--green); }
+  .view { display: none; }
+  .view.active { display: block; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Rücken<span>Fit</span></h1>
+  <div id="headerDate"></div>
+</header>
+
+<main>
+  <!-- Ansicht: Heute -->
+  <section id="viewToday" class="view active">
+    <div class="card">
+      <h2>Wie geht es Dir körperlich?</h2>
+      <div class="sub">Dein Rücken-Gefühl heute – 1 (schlecht) bis 10 (super)</div>
+      <div class="scale" id="scale"></div>
+      <div class="scale-labels"><span>schlecht</span><span>super</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Deine Übungen heute</h2>
+      <div class="sub">Einfach antippen zum Abhaken</div>
+      <div id="exerciseList"></div>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div id="progressFill"></div></div>
+        <div class="progress-text" id="progressText"></div>
+        <div class="all-done" id="allDone" style="display:none">🎉 Alle Übungen geschafft – stark!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ansicht: Übersicht -->
+  <section id="viewMonth" class="view">
+    <div class="card">
+      <div class="cal-nav">
+        <button id="prevMonth" aria-label="Voriger Monat">‹</button>
+        <div class="month-label" id="monthLabel"></div>
+        <button id="nextMonth" aria-label="Nächster Monat">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="legend">
+        <span><i class="full"></i> alles geschafft</span>
+        <span><i class="partial"></i> teilweise</span>
+        <span>Zahl unten = Gefühl</span>
+      </div>
+      <div id="dayDetail"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="val" id="statFull">0</div><div class="lbl">Tage komplett</div></div>
+      <div class="stat"><div class="val" id="statAny">0</div><div class="lbl">Tage trainiert</div></div>
+      <div class="stat"><div class="val" id="statFeel">–</div><div class="lbl">Ø Gefühl</div></div>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button id="tabToday" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    Heute
+  </button>
+  <button id="tabMonth">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Übersicht
+  </button>
+</nav>
+
+<script>
+const EXERCISES = [
+  { id: "liegestuetze", name: "Liegestütze" },
+  { id: "planke",       name: "Planke" },
+  { id: "seitplanke_r", name: "Seitplanke rechts" },
+  { id: "seitplanke_l", name: "Seitplanke links" },
+  { id: "situps",       name: "Sit-ups" },
+  { id: "kaefer",       name: "Großer Käfer" },
+];
+const STORE_KEY = "rueckenfit-v1";
+const MONTHS = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+const DOWS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+
+let data = {};
+try { data = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { data = {}; }
+function save() { localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
+
+function dateKey(d) {
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function todayKey() { return dateKey(new Date()); }
+function entry(key) {
+  if (!data[key]) data[key] = { done: [], feel: null };
+  return data[key];
+}
+
+/* ---------- Heute ---------- */
+const scaleEl = document.getElementById("scale");
+for (let i = 1; i <= 10; i++) {
+  const b = document.createElement("button");
+  b.textContent = i;
+  b.addEventListener("click", () => {
+    const e = entry(todayKey());
+    e.feel = (e.feel === i) ? null : i;
+    save();
+    renderScale();
+  });
+  scaleEl.appendChild(b);
+}
+function renderScale() {
+  const feel = (data[todayKey()] || {}).feel;
+  [...scaleEl.children].forEach((b, idx) => b.classList.toggle("sel", idx + 1 === feel));
+}
+
+const listEl = document.getElementById("exerciseList");
+EXERCISES.forEach(ex => {
+  const row = document.createElement("div");
+  row.className = "exercise";
+  row.innerHTML = '<div class="checkbox"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><div class="name">' + ex.name + '</div>';
+  row.addEventListener("click", () => {
+    const e = entry(todayKey());
+    const idx = e.done.indexOf(ex.id);
+    if (idx >= 0) e.done.splice(idx, 1); else e.done.push(ex.id);
+    save();
+    renderToday();
+  });
+  row.dataset.id = ex.id;
+  listEl.appendChild(row);
+});
+
+function renderToday() {
+  const e = data[todayKey()] || { done: [] };
+  [...listEl.children].forEach(row => row.classList.toggle("done", e.done.includes(row.dataset.id)));
+  const n = e.done.length, total = EXERCISES.length;
+  document.getElementById("progressFill").style.width = (n / total * 100) + "%";
+  document.getElementById("progressText").textContent = n + " von " + total + " Übungen";
+  document.getElementById("progressText").style.display = n === total ? "none" : "";
+  document.getElementById("allDone").style.display = n === total ? "" : "none";
+  renderScale();
+}
+
+/* ---------- Monatsübersicht ---------- */
+let calYear, calMonth, selectedKey = null;
+function setToCurrentMonth() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+}
+setToCurrentMonth();
+
+document.getElementById("prevMonth").addEventListener("click", () => { shiftMonth(-1); });
+document.getElementById("nextMonth").addEventListener("click", () => { shiftMonth(1); });
+function shiftMonth(d) {
+  calMonth += d;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  selectedKey = null;
+  renderMonth();
+}
+
+function renderMonth() {
+  document.getElementById("monthLabel").textContent = MONTHS[calMonth] + " " + calYear;
+  const grid = document.getElementById("calGrid");
+  grid.innerHTML = "";
+  DOWS.forEach(d => {
+    const el = document.createElement("div");
+    el.className = "dow";
+    el.textContent = d;
+    grid.appendChild(el);
+  });
+  const first = new Date(calYear, calMonth, 1);
+  const offset = (first.getDay() + 6) % 7; // Montag = 0
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const tKey = todayKey();
+  let statFull = 0, statAny = 0, feelSum = 0, feelCount = 0;
+
+  for (let i = 0; i < offset; i++) {
+    const el = document.createElement("div");
+    el.className = "cal-day other";
+    grid.appendChild(el);
+  }
+  for (let day = 1; day <= daysInMonth; day++) {
+    const key = dateKey(new Date(calYear, calMonth, day));
+    const e = data[key];
+    const el = document.createElement("div");
+    el.className = "cal-day";
+    if (key === tKey) el.classList.add("today");
+    if (key === selectedKey) el.classList.add("sel");
+    let feelHtml = "";
+    if (e) {
+      if (e.done.length === EXERCISES.length) { el.classList.add("full"); statFull++; }
+      else if (e.done.length > 0) el.classList.add("partial");
+      if (e.done.length > 0) statAny++;
+      if (e.feel) { feelHtml = '<div class="feel">' + e.feel + "</div>"; feelSum += e.feel; feelCount++; }
+    }
+    el.innerHTML = '<div class="num">' + day + "</div>" + feelHtml;
+    el.addEventListener("click", () => {
+      selectedKey = (selectedKey === key) ? null : key;
+      renderMonth();
+    });
+    grid.appendChild(el);
+  }
+
+  document.getElementById("statFull").textContent = statFull;
+  document.getElementById("statAny").textContent = statAny;
+  document.getElementById("statFeel").textContent = feelCount ? (feelSum / feelCount).toFixed(1) : "–";
+  renderDayDetail();
+}
+
+function renderDayDetail() {
+  const box = document.getElementById("dayDetail");
+  if (!selectedKey) { box.classList.remove("show"); return; }
+  const [y, m, d] = selectedKey.split("-").map(Number);
+  const e = data[selectedKey] || { done: [], feel: null };
+  const feelTxt = e.feel ? "Gefühl: " + e.feel + "/10" : "Kein Gefühls-Wert";
+  let html = "<h3>" + d + ". " + MONTHS[m - 1] + " " + y + " · " + feelTxt + "</h3><ul>";
+  EXERCISES.forEach(ex => {
+    const ok = e.done.includes(ex.id);
+    html += '<li class="' + (ok ? "ok" : "miss") + '">' + ex.name + "</li>";
+  });
+  box.innerHTML = html + "</ul>";
+  box.classList.add("show");
+}
+
+/* ---------- Tabs & Kopfzeile ---------- */
+const tabToday = document.getElementById("tabToday");
+const tabMonth = document.getElementById("tabMonth");
+function showView(which) {
+  document.getElementById("viewToday").classList.toggle("active", which === "today");
+  document.getElementById("viewMonth").classList.toggle("active", which === "month");
+  tabToday.classList.toggle("active", which === "today");
+  tabMonth.classList.toggle("active", which === "month");
+  if (which === "month") renderMonth();
+}
+tabToday.addEventListener("click", () => showView("today"));
+tabMonth.addEventListener("click", () => showView("month"));
+
+function renderHeader() {
+  const now = new Date();
+  document.getElementById("headerDate").textContent =
+    ["So","Mo","Di","Mi","Do","Fr","Sa"][now.getDay()] + ", " + now.getDate() + ". " + MONTHS[now.getMonth()];
+}
+
+/* Beim Zurückkehren in die App (z. B. nach Mitternacht) neu rendern */
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) { renderHeader(); renderToday(); setToCurrentMonth(); }
+});
+
+renderHeader();
+renderToday();
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>
