@@ -137,6 +137,32 @@
     border-bottom: 1px solid var(--line);
   }
 
+  /* Tages-Notizen (Chips) */
+  .chips { display: flex; flex-direction: column; gap: 8px; }
+  .chips button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    background: transparent;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 12px 14px;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+  }
+  .chips button .dot-ind {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--line);
+  }
+  .chips button.sel { border-color: var(--factor-color); background: color-mix(in srgb, var(--factor-color) 12%, transparent); }
+  .chips button.sel .dot-ind { background: var(--factor-color); }
+
   .progress-wrap { margin-top: 14px; }
   .progress-bar {
     height: 8px;
@@ -216,6 +242,18 @@
   }
   .cal-day.full { background: var(--green); color: #fff; }
   .cal-day.full .feel { color: rgba(255,255,255,0.85); }
+  .cal-day .dots {
+    position: absolute;
+    bottom: 2px;
+    display: flex;
+    gap: 2px;
+  }
+  .cal-day .dots i {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    display: block;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.6);
+  }
   .cal-day.partial { background: color-mix(in srgb, var(--partial) 30%, transparent); }
   .cal-day.sel { box-shadow: inset 0 0 0 2px var(--text); }
   .legend {
@@ -321,6 +359,12 @@
         <div class="all-done" id="allDone" style="display:none">🎉 Alle Übungen geschafft – stark!</div>
       </div>
     </div>
+
+    <div class="card">
+      <h2>Zum Tag notieren</h2>
+      <div class="sub">Für die spätere Auswertung, wenn es Dir mal nicht gut geht</div>
+      <div class="chips" id="factorChips"></div>
+    </div>
   </section>
 
   <!-- Ansicht: Übersicht -->
@@ -343,6 +387,9 @@
       <div class="stat"><div class="val" id="statFull">0</div><div class="lbl">Tage komplett</div></div>
       <div class="stat"><div class="val" id="statAny">0</div><div class="lbl">Tage trainiert</div></div>
       <div class="stat"><div class="val" id="statFeel">–</div><div class="lbl">Ø Gefühl</div></div>
+      <div class="stat"><div class="val" id="statSchmerz" style="color:#e05d5d">0</div><div class="lbl">💊 Schmerzmittel</div></div>
+      <div class="stat"><div class="val" id="statPhysio" style="color:#4a90d9">0</div><div class="lbl">🧑‍⚕️ Physio</div></div>
+      <div class="stat"><div class="val" id="statSteh" style="color:#9b6fc3">0</div><div class="lbl">🦵 Viel gestanden</div></div>
     </div>
   </section>
 </main>
@@ -369,7 +416,13 @@ const EXERCISES = [
   { id: "beinheben_hinten", name: "Beinheben nach hinten", hint: "Oberkörper auflegen, aus dem Kreuzbein heben" },
   { id: "schulterbruecke",  name: "Schulterbrücke" },
   { id: "pilates",          name: "Pilates Workout", workout: true },
-  { id: "cycling",          name: "Indoor Cycling", workout: true },
+  { id: "cycling",          name: "Indoor Cycling", workout: true, optional: true, hint: "extra – zählt nicht zum Tages-Soll" },
+];
+const REQUIRED = EXERCISES.filter(ex => !ex.optional);
+const FACTORS = [
+  { id: "schmerzmittel", name: "Schmerzmittel genommen", icon: "💊", color: "#e05d5d" },
+  { id: "physio",        name: "Physio-Termin",          icon: "🧑‍⚕️", color: "#4a90d9" },
+  { id: "anstrengend",   name: "Anstrengender Tag, viel gestanden", icon: "🦵", color: "#9b6fc3" },
 ];
 const STORE_KEY = "rueckenfit-v1";
 const MONTHS = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
@@ -397,7 +450,8 @@ function dateKey(d) {
 }
 function todayKey() { return dateKey(new Date()); }
 function entry(key) {
-  if (!data[key]) data[key] = { done: [], feel: null };
+  if (!data[key]) data[key] = { done: [], feel: null, factors: [] };
+  if (!Array.isArray(data[key].factors)) data[key].factors = [];
   return data[key];
 }
 
@@ -444,10 +498,31 @@ EXERCISES.forEach(ex => {
   listEl.appendChild(row);
 });
 
+const chipsEl = document.getElementById("factorChips");
+FACTORS.forEach(f => {
+  const b = document.createElement("button");
+  b.style.setProperty("--factor-color", f.color);
+  b.innerHTML = '<span class="dot-ind"></span><span>' + f.icon + " " + f.name + "</span>";
+  b.addEventListener("click", () => {
+    const e = entry(todayKey());
+    const idx = e.factors.indexOf(f.id);
+    if (idx >= 0) e.factors.splice(idx, 1); else e.factors.push(f.id);
+    save();
+    renderToday();
+  });
+  b.dataset.id = f.id;
+  chipsEl.appendChild(b);
+});
+
+function requiredDone(e) {
+  return REQUIRED.filter(ex => e.done.includes(ex.id)).length;
+}
+
 function renderToday() {
-  const e = data[todayKey()] || { done: [] };
+  const e = data[todayKey()] || { done: [], factors: [] };
   [...listEl.children].forEach(row => row.classList.toggle("done", e.done.includes(row.dataset.id)));
-  const n = e.done.length, total = EXERCISES.length;
+  [...chipsEl.children].forEach(b => b.classList.toggle("sel", (e.factors || []).includes(b.dataset.id)));
+  const n = requiredDone(e), total = REQUIRED.length;
   document.getElementById("progressFill").style.width = (n / total * 100) + "%";
   document.getElementById("progressText").textContent = n + " von " + total + " Übungen";
   document.getElementById("progressText").style.display = n === total ? "none" : "";
@@ -489,6 +564,7 @@ function renderMonth() {
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
   const tKey = todayKey();
   let statFull = 0, statAny = 0, feelSum = 0, feelCount = 0;
+  const factorCounts = { schmerzmittel: 0, physio: 0, anstrengend: 0 };
 
   for (let i = 0; i < offset; i++) {
     const el = document.createElement("div");
@@ -502,14 +578,20 @@ function renderMonth() {
     el.className = "cal-day";
     if (key === tKey) el.classList.add("today");
     if (key === selectedKey) el.classList.add("sel");
-    let feelHtml = "";
+    let feelHtml = "", dotsHtml = "";
     if (e) {
-      if (e.done.length === EXERCISES.length) { el.classList.add("full"); statFull++; }
+      if (requiredDone(e) === REQUIRED.length) { el.classList.add("full"); statFull++; }
       else if (e.done.length > 0) el.classList.add("partial");
       if (e.done.length > 0) statAny++;
       if (e.feel) { feelHtml = '<div class="feel">' + e.feel + "</div>"; feelSum += e.feel; feelCount++; }
+      const fs = e.factors || [];
+      if (fs.length) {
+        dotsHtml = '<div class="dots">' + FACTORS.filter(f => fs.includes(f.id))
+          .map(f => '<i style="background:' + f.color + '"></i>').join("") + "</div>";
+        fs.forEach(id => { if (id in factorCounts) factorCounts[id]++; });
+      }
     }
-    el.innerHTML = '<div class="num">' + day + "</div>" + feelHtml;
+    el.innerHTML = '<div class="num">' + day + "</div>" + feelHtml + dotsHtml;
     el.addEventListener("click", () => {
       selectedKey = (selectedKey === key) ? null : key;
       renderMonth();
@@ -520,6 +602,9 @@ function renderMonth() {
   document.getElementById("statFull").textContent = statFull;
   document.getElementById("statAny").textContent = statAny;
   document.getElementById("statFeel").textContent = feelCount ? (feelSum / feelCount).toFixed(1) : "–";
+  document.getElementById("statSchmerz").textContent = factorCounts.schmerzmittel;
+  document.getElementById("statPhysio").textContent = factorCounts.physio;
+  document.getElementById("statSteh").textContent = factorCounts.anstrengend;
   renderDayDetail();
 }
 
@@ -527,14 +612,20 @@ function renderDayDetail() {
   const box = document.getElementById("dayDetail");
   if (!selectedKey) { box.classList.remove("show"); return; }
   const [y, m, d] = selectedKey.split("-").map(Number);
-  const e = data[selectedKey] || { done: [], feel: null };
+  const e = data[selectedKey] || { done: [], feel: null, factors: [] };
   const feelTxt = e.feel ? "Gefühl: " + e.feel + "/10" : "Kein Gefühls-Wert";
   let html = "<h3>" + d + ". " + MONTHS[m - 1] + " " + y + " · " + feelTxt + "</h3><ul>";
   EXERCISES.forEach(ex => {
     const ok = e.done.includes(ex.id);
     html += '<li class="' + (ok ? "ok" : "miss") + '">' + ex.name + "</li>";
   });
-  box.innerHTML = html + "</ul>";
+  html += "</ul>";
+  const fs = e.factors || [];
+  if (fs.length) {
+    html += '<ul style="margin-top:8px">' + FACTORS.filter(f => fs.includes(f.id))
+      .map(f => '<li style="color:' + f.color + '">' + f.icon + " " + f.name + "</li>").join("") + "</ul>";
+  }
+  box.innerHTML = html;
   box.classList.add("show");
 }
 

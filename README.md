@@ -9,7 +9,10 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
 - **Tägliche Übungsliste zum Abhaken:** Liegestütze, Planke, Seitplanke,
   Großer Käfer, Beinheben in Bauchlage, Beinheben in Seitenlage
   (Thera-Band), Beinheben nach hinten, Schulterbrücke – plus die Workouts
-  Pilates und Indoor Cycling
+  Pilates und Indoor Cycling (Cycling zählt nicht zum Tages-Soll)
+- **Tages-Notizen für die Rück-Analyse:** Schmerzmittel genommen,
+  Physio-Termin, anstrengender Tag mit viel Stehen – erscheinen als
+  farbige Punkte im Kalender und als Zähler in der Monatsstatistik
 - **Gefühls-Skala 1–10:** Beim Öffnen der App wählst Du mit einem Tipp,
   wie es Dir körperlich (Rücken) gerade geht
 - **Monatsübersicht:** Kalender, der zeigt, an welchen Tagen Du trainiert
