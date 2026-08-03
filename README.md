@@ -6,8 +6,10 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
 
 ## Funktionen
 
-- **Tägliche Übungsliste zum Abhaken:** Liegestütze, Planke, Seitplanke
-  rechts, Seitplanke links, Sit-ups, Großer Käfer
+- **Tägliche Übungsliste zum Abhaken:** Liegestütze, Planke, Seitplanke,
+  Großer Käfer, Beinheben in Bauchlage, Beinheben in Seitenlage
+  (Thera-Band), Beinheben nach hinten, Schulterbrücke – plus die Workouts
+  Pilates und Indoor Cycling
 - **Gefühls-Skala 1–10:** Beim Öffnen der App wählst Du mit einem Tipp,
   wie es Dir körperlich (Rücken) gerade geht
 - **Monatsübersicht:** Kalender, der zeigt, an welchen Tagen Du trainiert

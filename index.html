@@ -125,7 +125,17 @@
   }
   .exercise.done .checkbox svg { opacity: 1; }
   .exercise .name { font-size: 1rem; font-weight: 500; }
+  .exercise .hint { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
   .exercise.done .name { color: var(--muted); text-decoration: line-through; }
+  .section-label {
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 14px 4px 4px;
+    border-bottom: 1px solid var(--line);
+  }
 
   .progress-wrap { margin-top: 14px; }
   .progress-bar {
@@ -350,12 +360,16 @@
 
 <script>
 const EXERCISES = [
-  { id: "liegestuetze", name: "Liegestütze" },
-  { id: "planke",       name: "Planke" },
-  { id: "seitplanke_r", name: "Seitplanke rechts" },
-  { id: "seitplanke_l", name: "Seitplanke links" },
-  { id: "situps",       name: "Sit-ups" },
-  { id: "kaefer",       name: "Großer Käfer" },
+  { id: "liegestuetze",     name: "Liegestütze" },
+  { id: "planke",           name: "Planke" },
+  { id: "seitplanke",       name: "Seitplanke", hint: "rechts und links" },
+  { id: "kaefer",           name: "Großer Käfer" },
+  { id: "beinheben_bauch",  name: "Beinheben in Bauchlage", hint: "aus der Hüfte, li + re – nicht aus dem Rücken" },
+  { id: "beinheben_seite",  name: "Beinheben in Seitenlage", hint: "Thera-Band überm Knie, Hüfte vorne lassen" },
+  { id: "beinheben_hinten", name: "Beinheben nach hinten", hint: "Oberkörper auflegen, aus dem Kreuzbein heben" },
+  { id: "schulterbruecke",  name: "Schulterbrücke" },
+  { id: "pilates",          name: "Pilates Workout", workout: true },
+  { id: "cycling",          name: "Indoor Cycling", workout: true },
 ];
 const STORE_KEY = "rueckenfit-v1";
 const MONTHS = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
@@ -363,6 +377,19 @@ const DOWS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
 
 let data = {};
 try { data = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { data = {}; }
+
+/* Migration: alte Einträge (Seitplanke rechts/links getrennt, Sit-ups) umziehen */
+(function migrate() {
+  let changed = false;
+  Object.values(data).forEach((e) => {
+    if (!e || !Array.isArray(e.done)) return;
+    const hadSide = e.done.includes("seitplanke_r") || e.done.includes("seitplanke_l");
+    const cleaned = e.done.filter((id) => !["seitplanke_r", "seitplanke_l", "situps"].includes(id));
+    if (hadSide && !cleaned.includes("seitplanke")) cleaned.push("seitplanke");
+    if (cleaned.length !== e.done.length || hadSide) { e.done = cleaned; changed = true; }
+  });
+  if (changed) save();
+})();
 function save() { localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
 
 function dateKey(d) {
@@ -393,10 +420,19 @@ function renderScale() {
 }
 
 const listEl = document.getElementById("exerciseList");
+let workoutLabelAdded = false;
 EXERCISES.forEach(ex => {
+  if (ex.workout && !workoutLabelAdded) {
+    const label = document.createElement("div");
+    label.className = "section-label";
+    label.textContent = "Workouts";
+    listEl.appendChild(label);
+    workoutLabelAdded = true;
+  }
   const row = document.createElement("div");
   row.className = "exercise";
-  row.innerHTML = '<div class="checkbox"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><div class="name">' + ex.name + '</div>';
+  const hintHtml = ex.hint ? '<div class="hint">' + ex.hint + "</div>" : "";
+  row.innerHTML = '<div class="checkbox"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><div><div class="name">' + ex.name + "</div>" + hintHtml + "</div>";
   row.addEventListener("click", () => {
     const e = entry(todayKey());
     const idx = e.done.indexOf(ex.id);
