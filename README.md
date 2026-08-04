@@ -11,6 +11,10 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   (Thera-Band), Beinheben nach hinten, Schulterbrücke, Streckung des
   Hüftbeugers – plus die Workouts
   Pilates und Indoor Cycling (Cycling zählt nicht zum Tages-Soll)
+- **Booster-Anzeige:** Ein Muskel-Männchen, das mit jedem guten
+  Trainingstag (mind. 7 Übungen) wächst und stärker wird – mit farbigem
+  Booster-Balken (0–10) und Serien-Zähler. An Tagen mit 0–1 Übungen
+  schrumpft der Muskel wieder etwas
 - **Tages-Notizen für die Rück-Analyse:** Schmerzmittel genommen,
   Physio-Termin, anstrengender Tag mit viel Stehen – erscheinen als
   farbige Punkte im Kalender und als Zähler in der Monatsstatistik

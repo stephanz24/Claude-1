@@ -137,6 +137,34 @@
     border-bottom: 1px solid var(--line);
   }
 
+  /* Booster */
+  .booster { display: flex; align-items: center; gap: 16px; }
+  .booster .figure { flex-shrink: 0; width: 96px; height: 110px; color: var(--green); }
+  .booster .figure svg { width: 100%; height: 100%; }
+  .booster .info { flex: 1; min-width: 0; }
+  .booster .level-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 2px; }
+  .booster .streak { color: var(--muted); font-size: 0.85rem; margin-bottom: 10px; }
+  .booster-bar {
+    height: 14px;
+    background: var(--line);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  .booster-bar div {
+    height: 100%;
+    border-radius: 7px;
+    width: 0;
+    transition: width 0.4s, background 0.4s;
+  }
+  .booster .bar-label {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 6px;
+  }
+  .booster-hint { color: var(--muted); font-size: 0.75rem; margin-top: 12px; }
+
   /* Tages-Notizen (Chips) */
   .chips { display: flex; flex-direction: column; gap: 8px; }
   .chips button {
@@ -350,6 +378,20 @@
     </div>
 
     <div class="card">
+      <h2>Dein Booster</h2>
+      <div class="booster">
+        <div class="figure" id="boosterFigure"></div>
+        <div class="info">
+          <div class="level-name" id="boosterName">Aufwärmen</div>
+          <div class="streak" id="boosterStreak"></div>
+          <div class="booster-bar"><div id="boosterFill"></div></div>
+          <div class="bar-label"><span>0</span><span id="boosterValue"></span><span>10</span></div>
+        </div>
+      </div>
+      <div class="booster-hint">Guter Tag = mindestens 7 Übungen · bei 0–1 Übungen schrumpft der Muskel wieder etwas</div>
+    </div>
+
+    <div class="card">
       <h2>Deine Übungen heute</h2>
       <div class="sub">Einfach antippen zum Abhaken</div>
       <div id="exerciseList"></div>
@@ -519,6 +561,89 @@ function requiredDone(e) {
   return REQUIRED.filter(ex => e.done.includes(ex.id)).length;
 }
 
+/* ---------- Booster ---------- */
+const GOOD_MIN = 7;   // ab so vielen Übungen zählt der Tag als "gut"
+const BAD_MAX = 1;    // bei so wenigen (oder weniger) schrumpft der Muskel
+const GAIN = 1, LOSS = 0.5, POWER_MAX = 10;
+
+function dayScore(key) {
+  const e = data[key];
+  const n = e ? requiredDone(e) : 0;
+  if (n >= GOOD_MIN) return "good";
+  if (n <= BAD_MAX) return "bad";
+  return "neutral";
+}
+
+function computeBooster() {
+  const keys = Object.keys(data).filter(k => {
+    const e = data[k];
+    return e && ((e.done && e.done.length) || e.feel || (e.factors && e.factors.length));
+  }).sort();
+  const tKey = todayKey();
+  let power = 0, streak = 0;
+  if (keys.length) {
+    // Alle Tage vom ersten Eintrag bis gestern durchgehen (Lücken = 0 Übungen)
+    const [y0, m0, d0] = keys[0].split("-").map(Number);
+    const cursor = new Date(y0, m0 - 1, d0);
+    while (dateKey(cursor) < tKey) {
+      const s = dayScore(dateKey(cursor));
+      if (s === "good") { power = Math.min(POWER_MAX, power + GAIN); streak++; }
+      else { if (s === "bad") power = Math.max(0, power - LOSS); streak = 0; }
+      cursor.setDate(cursor.getDate() + 1);
+    }
+  }
+  // Heute zählt nur positiv, sobald das Soll erreicht ist (kein Abzug für einen laufenden Tag)
+  if (dayScore(tKey) === "good") { power = Math.min(POWER_MAX, power + GAIN); streak++; }
+  return { power, streak };
+}
+
+function boosterFigureSVG(m) {
+  const sh = 15 + m * 15;          // halbe Schulterbreite
+  const waist = 11 + m * 5;        // halbe Taille
+  const armW = 4.5 + m * 6;
+  const bicepR = 3.5 + m * 6.5;
+  const legW = 6 + m * 5.5;
+  const scale = 0.82 + m * 0.28;
+  const flex = m >= 0.55;          // ab "In Form" wird posiert
+  const armY = flex ? 30 : 50;     // Faust oben (Pose) oder unten
+  const elbowX = sh + 11, fistX = flex ? sh + 9 : sh + 13;
+  const arm = (sgn) =>
+    '<path d="M ' + (50 + sgn * (sh - 2)) + ' 31 L ' + (50 + sgn * elbowX) + ' 44 L ' + (50 + sgn * fistX) + " " + armY +
+    '" fill="none" stroke="currentColor" stroke-width="' + armW + '" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<circle cx="' + (50 + sgn * (sh + 4)) + '" cy="' + (flex ? 39 : 37) + '" r="' + bicepR + '" fill="currentColor"/>';
+  return '<svg viewBox="0 0 100 120" aria-hidden="true">' +
+    '<g transform="translate(50 116) scale(' + scale.toFixed(3) + ') translate(-50 -116)">' +
+    '<ellipse cx="50" cy="114" rx="' + (20 + m * 10) + '" ry="4" fill="currentColor" opacity="0.15"/>' +
+    '<circle cx="50" cy="13" r="9" fill="currentColor"/>' +
+    '<path d="M ' + (50 - sh) + " 27 Q 50 " + (22 - m * 2) + " " + (50 + sh) + " 27 L " + (50 + waist) + " 72 L " + (50 - waist) +
+    ' 72 Z" fill="currentColor"/>' +
+    arm(-1) + arm(1) +
+    '<path d="M ' + (50 - waist + 3) + ' 70 L ' + (50 - waist - 1) + ' 108" fill="none" stroke="currentColor" stroke-width="' + legW + '" stroke-linecap="round"/>' +
+    '<path d="M ' + (50 + waist - 3) + ' 70 L ' + (50 + waist + 1) + ' 108" fill="none" stroke="currentColor" stroke-width="' + legW + '" stroke-linecap="round"/>' +
+    "</g></svg>";
+}
+
+function renderBooster() {
+  const { power, streak } = computeBooster();
+  const m = power / POWER_MAX;
+  document.getElementById("boosterFigure").innerHTML = boosterFigureSVG(m);
+  const names = ["Aufwärmen", "Auf dem Weg", "In Form", "Stark", "Booster-Modus 💪"];
+  const name = power >= POWER_MAX ? "Maximal-Booster 🔥" : names[Math.min(4, Math.floor(m * 5))];
+  document.getElementById("boosterName").textContent = name;
+  document.getElementById("boosterStreak").textContent =
+    streak === 0 ? "Noch kein guter Tag in Folge – heute geht's los!"
+    : streak === 1 ? "1 guter Tag in Folge"
+    : streak + " gute Tage in Folge";
+  const hue = 15 + m * 115; // rot-orange -> grün
+  const fill = document.getElementById("boosterFill");
+  fill.style.width = (m * 100) + "%";
+  fill.style.background = power >= POWER_MAX
+    ? "linear-gradient(90deg, hsl(130 55% 42%), #f0b429)"
+    : "hsl(" + Math.round(hue) + " 60% 45%)";
+  document.getElementById("boosterValue").textContent =
+    (power % 1 === 0 ? power : power.toFixed(1)) + " / " + POWER_MAX;
+}
+
 function renderToday() {
   const e = data[todayKey()] || { done: [], factors: [] };
   [...listEl.children].forEach(row => row.classList.toggle("done", e.done.includes(row.dataset.id)));
@@ -529,6 +654,7 @@ function renderToday() {
   document.getElementById("progressText").style.display = n === total ? "none" : "";
   document.getElementById("allDone").style.display = n === total ? "" : "none";
   renderScale();
+  renderBooster();
 }
 
 /* ---------- Monatsübersicht ---------- */
