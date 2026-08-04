@@ -8,7 +8,8 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
 
 - **Tägliche Übungsliste zum Abhaken:** Liegestütze, Planke, Seitplanke,
   Großer Käfer, Beinheben in Bauchlage, Beinheben in Seitenlage
-  (Thera-Band), Beinheben nach hinten, Schulterbrücke – plus die Workouts
+  (Thera-Band), Beinheben nach hinten, Schulterbrücke, Streckung des
+  Hüftbeugers – plus die Workouts
   Pilates und Indoor Cycling (Cycling zählt nicht zum Tages-Soll)
 - **Tages-Notizen für die Rück-Analyse:** Schmerzmittel genommen,
   Physio-Termin, anstrengender Tag mit viel Stehen – erscheinen als
