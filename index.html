@@ -614,6 +614,7 @@ const GAIN = 1, LOSS = 0.5, POWER_MAX = 10;
 
 function dayScore(key) {
   const e = data[key];
+  if (e && e.done.includes("pilates")) return "good"; // Pilates-Tag zählt immer als guter Tag
   const n = e ? requiredDone(e) : 0;
   if (n >= GOOD_MIN) return "good";
   if (n <= BAD_MAX) return "bad";
@@ -671,7 +672,7 @@ function boosterFigureSVG(m) {
 
 document.getElementById("boosterHint").textContent =
   "Guter Tag = mindestens " + GOOD_MIN + " von " + REQUIRED.length +
-  " Übungen · bei 0–1 Übungen schrumpft der Muskel wieder etwas";
+  " Übungen oder ein Pilates Workout · bei 0–1 Übungen schrumpft der Muskel wieder etwas";
 
 function renderBooster() {
   const { power, streak } = computeBooster();
