@@ -137,6 +137,43 @@
     border-bottom: 1px solid var(--line);
   }
 
+  /* Merksatz */
+  .motto {
+    background: var(--card);
+    border-left: 5px solid var(--green);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-top: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .motto ol {
+    list-style: none;
+    counter-reset: motto;
+  }
+  .motto li {
+    counter-increment: motto;
+    font-weight: 700;
+    font-size: 1.02rem;
+    padding: 3px 0;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .motto li::before {
+    content: counter(motto);
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(3px);
+  }
+
   /* Booster */
   .booster { display: flex; align-items: center; gap: 16px; }
   .booster .figure { flex-shrink: 0; width: 96px; height: 110px; color: var(--green); }
@@ -370,6 +407,14 @@
 <main>
   <!-- Ansicht: Heute -->
   <section id="viewToday" class="view active">
+    <div class="motto">
+      <ol>
+        <li>Erst mobilisieren</li>
+        <li>Dann Gegenrichtung aufdehnen</li>
+        <li>Und dann kräftigen</li>
+      </ol>
+    </div>
+
     <div class="card">
       <h2>Wie geht es Dir körperlich?</h2>
       <div class="sub">Dein Rücken-Gefühl heute – 1 (schlecht) bis 10 (super)</div>
