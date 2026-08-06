@@ -388,7 +388,7 @@
           <div class="bar-label"><span>0</span><span id="boosterValue"></span><span>10</span></div>
         </div>
       </div>
-      <div class="booster-hint">Guter Tag = mindestens 7 Übungen · bei 0–1 Übungen schrumpft der Muskel wieder etwas</div>
+      <div class="booster-hint" id="boosterHint"></div>
     </div>
 
     <div class="card">
@@ -449,15 +449,16 @@
 
 <script>
 const EXERCISES = [
+  { id: "hueftbeuger",      name: "Streckung des Hüftbeugers", hint: "zuerst dehnen, als Vorbereitung – links und rechts" },
   { id: "liegestuetze",     name: "Liegestütze" },
   { id: "planke",           name: "Planke" },
   { id: "seitplanke",       name: "Seitplanke", hint: "rechts und links" },
   { id: "kaefer",           name: "Großer Käfer" },
   { id: "beinheben_bauch",  name: "Beinheben in Bauchlage", hint: "aus der Hüfte, li + re – nicht aus dem Rücken" },
   { id: "beinheben_seite",  name: "Beinheben in Seitenlage", hint: "Thera-Band überm Knie, Hüfte vorne lassen" },
+  { id: "beindrehen_seite", name: "Beindrehen in Seitenlage", hint: "Bein hinten nach oben drehen, mit Thera-Band" },
   { id: "beinheben_hinten", name: "Beinheben nach hinten", hint: "Oberkörper auflegen, aus dem Kreuzbein heben" },
   { id: "schulterbruecke",  name: "Schulterbrücke" },
-  { id: "hueftbeuger",      name: "Streckung des Hüftbeugers", hint: "links und rechts" },
   { id: "pilates",          name: "Pilates Workout", workout: true },
   { id: "cycling",          name: "Indoor Cycling", workout: true, optional: true, hint: "extra – zählt nicht zum Tages-Soll" },
 ];
@@ -562,7 +563,7 @@ function requiredDone(e) {
 }
 
 /* ---------- Booster ---------- */
-const GOOD_MIN = 7;   // ab so vielen Übungen zählt der Tag als "gut"
+const GOOD_MIN = Math.ceil(REQUIRED.length * 0.7); // ab so vielen Übungen zählt der Tag als "gut" (70 %)
 const BAD_MAX = 1;    // bei so wenigen (oder weniger) schrumpft der Muskel
 const GAIN = 1, LOSS = 0.5, POWER_MAX = 10;
 
@@ -622,6 +623,10 @@ function boosterFigureSVG(m) {
     '<path d="M ' + (50 + waist - 3) + ' 70 L ' + (50 + waist + 1) + ' 108" fill="none" stroke="currentColor" stroke-width="' + legW + '" stroke-linecap="round"/>' +
     "</g></svg>";
 }
+
+document.getElementById("boosterHint").textContent =
+  "Guter Tag = mindestens " + GOOD_MIN + " von " + REQUIRED.length +
+  " Übungen · bei 0–1 Übungen schrumpft der Muskel wieder etwas";
 
 function renderBooster() {
   const { power, streak } = computeBooster();
