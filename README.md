@@ -6,8 +6,9 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
 
 ## Funktionen
 
-- **Tägliche Übungsliste zum Abhaken:** Streckung des Hüftbeugers (zuerst,
-  als Dehnung), Liegestütze, Planke, Seitplanke, Großer Käfer, Beinheben
+- **Tägliche Übungsliste zum Abhaken:** Stretching in die Seite (zuerst,
+  li + re, Innenseiten der Oberschenkel), Streckung des Hüftbeugers
+  (Dehnung), Liegestütze, Planke, Seitplanke, Großer Käfer, Beinheben
   in Bauchlage, Beinheben in Seitenlage (Thera-Band), Beindrehen in
   Seitenlage (Thera-Band), Beinheben nach hinten, Schulterbrücke – plus
   die Workouts
