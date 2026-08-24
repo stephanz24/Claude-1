@@ -346,12 +346,25 @@
     display: none;
   }
   #dayDetail.show { display: block; }
-  #dayDetail h3 { font-size: 0.95rem; margin-bottom: 6px; }
-  #dayDetail ul { list-style: none; }
-  #dayDetail li { padding: 3px 0; color: var(--muted); }
-  #dayDetail li.ok { color: var(--text); }
-  #dayDetail li.ok::before { content: "✓ "; color: var(--green); font-weight: 700; }
-  #dayDetail li.miss::before { content: "– "; }
+  #dayDetail h3 { font-size: 0.95rem; margin-bottom: 4px; }
+  #dayDetail .note { color: var(--muted); font-size: 0.78rem; }
+  #dayDetail .group {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 16px 0 6px;
+  }
+  #dayDetail .scale button { font-size: 0.9rem; border-radius: 10px; }
+  #dayDetail .exercise { padding: 9px 2px; gap: 11px; }
+  #dayDetail .exercise .name { font-size: 0.92rem; }
+  #dayDetail .exercise .hint { font-size: 0.7rem; }
+  #dayDetail .checkbox { width: 24px; height: 24px; }
+  #dayDetail .checkbox svg { width: 13px; height: 13px; }
+  #dayDetail .chips button { padding: 10px 12px; font-size: 0.88rem; }
+  #dayDetail .day-sum { color: var(--muted); font-size: 0.8rem; margin-top: 12px; }
+  .stats-row.factors { grid-template-columns: 1fr 1fr; }
 
   .stats-row {
     display: grid;
@@ -467,6 +480,7 @@
         <span><i class="full"></i> alles geschafft</span>
         <span><i class="partial"></i> teilweise</span>
         <span>Zahl unten = Gefühl</span>
+        <span>Tag antippen = nachtragen</span>
       </div>
       <div id="dayDetail"></div>
     </div>
@@ -474,10 +488,8 @@
       <div class="stat"><div class="val" id="statFull">0</div><div class="lbl">Tage komplett</div></div>
       <div class="stat"><div class="val" id="statAny">0</div><div class="lbl">Tage trainiert</div></div>
       <div class="stat"><div class="val" id="statFeel">–</div><div class="lbl">Ø Gefühl</div></div>
-      <div class="stat"><div class="val" id="statSchmerz" style="color:#e05d5d">0</div><div class="lbl">💊 Schmerzmittel</div></div>
-      <div class="stat"><div class="val" id="statPhysio" style="color:#4a90d9">0</div><div class="lbl">🧑‍⚕️ Physio</div></div>
-      <div class="stat"><div class="val" id="statSteh" style="color:#9b6fc3">0</div><div class="lbl">🦵 Viel gestanden</div></div>
     </div>
+    <div class="stats-row factors" id="factorStats"></div>
   </section>
 </main>
 
@@ -511,10 +523,25 @@ const EXERCISES = [
 ];
 const REQUIRED = EXERCISES.filter(ex => !ex.optional);
 const FACTORS = [
-  { id: "schmerzmittel", name: "Schmerzmittel genommen", icon: "💊", color: "#e05d5d" },
-  { id: "physio",        name: "Physio-Termin",          icon: "🧑‍⚕️", color: "#4a90d9" },
-  { id: "anstrengend",   name: "Anstrengender Tag, viel gestanden", icon: "🦵", color: "#9b6fc3" },
+  { id: "schmerzmittel", name: "Schmerzmittel genommen", short: "Schmerzmittel", icon: "💊", color: "#e05d5d" },
+  { id: "voltaren",      name: "Voltaren aufgetragen",   short: "Voltaren",      icon: "🧴", color: "#e08a3c" },
+  { id: "physio",        name: "Physio-Termin",          short: "Physio",        icon: "🧑‍⚕️", color: "#4a90d9" },
+  { id: "anstrengend",   name: "Anstrengender Tag, viel gestanden", short: "Viel gestanden", icon: "🦵", color: "#9b6fc3" },
 ];
+
+/* Bausteine, die Heute-Ansicht und Nachtrag-Ansicht gemeinsam nutzen */
+const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+function exerciseInnerHTML(ex) {
+  return '<div class="checkbox">' + CHECK_SVG + '</div><div><div class="name">' + ex.name + "</div>" +
+    (ex.hint ? '<div class="hint">' + ex.hint + "</div>" : "") + "</div>";
+}
+function factorInnerHTML(f) {
+  return '<span class="dot-ind"></span><span>' + f.icon + " " + f.name + "</span>";
+}
+function toggleIn(list, id) {
+  const i = list.indexOf(id);
+  if (i >= 0) list.splice(i, 1); else list.push(id);
+}
 const STORE_KEY = "rueckenfit-v1";
 const MONTHS = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
 const DOWS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
@@ -576,12 +603,9 @@ EXERCISES.forEach(ex => {
   }
   const row = document.createElement("div");
   row.className = "exercise";
-  const hintHtml = ex.hint ? '<div class="hint">' + ex.hint + "</div>" : "";
-  row.innerHTML = '<div class="checkbox"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div><div><div class="name">' + ex.name + "</div>" + hintHtml + "</div>";
+  row.innerHTML = exerciseInnerHTML(ex);
   row.addEventListener("click", () => {
-    const e = entry(todayKey());
-    const idx = e.done.indexOf(ex.id);
-    if (idx >= 0) e.done.splice(idx, 1); else e.done.push(ex.id);
+    toggleIn(entry(todayKey()).done, ex.id);
     save();
     renderToday();
   });
@@ -593,11 +617,9 @@ const chipsEl = document.getElementById("factorChips");
 FACTORS.forEach(f => {
   const b = document.createElement("button");
   b.style.setProperty("--factor-color", f.color);
-  b.innerHTML = '<span class="dot-ind"></span><span>' + f.icon + " " + f.name + "</span>";
+  b.innerHTML = factorInnerHTML(f);
   b.addEventListener("click", () => {
-    const e = entry(todayKey());
-    const idx = e.factors.indexOf(f.id);
-    if (idx >= 0) e.factors.splice(idx, 1); else e.factors.push(f.id);
+    toggleIn(entry(todayKey()).factors, f.id);
     save();
     renderToday();
   });
@@ -611,17 +633,19 @@ function requiredDone(e) {
 
 /* ---------- Booster ---------- */
 const GOOD_MIN = Math.ceil(REQUIRED.length * 0.7); // ab so vielen Übungen zählt der Tag als "gut" (70 %)
-const BAD_MAX = 1;    // bei so wenigen (oder weniger) schrumpft der Muskel
-const GAIN = 1, LOSS = 0.5, POWER_MAX = 10;
+const GAIN = 1, LOSS_MAX = 1, POWER_MAX = 10;
 
-function dayScore(key) {
+/* Tages-Bilanz: Soll erfüllt (oder Pilates) = +1.
+   Darunter geht es abwärts – je weniger Übungen, desto stärker;
+   ein Tag ganz ohne Training kostet einen vollen Punkt. */
+function dayDelta(key) {
   const e = data[key];
-  if (e && e.done.includes("pilates")) return "good"; // Pilates-Tag zählt immer als guter Tag
+  if (e && Array.isArray(e.done) && e.done.includes("pilates")) return GAIN; // Pilates-Tag zählt immer voll
   const n = e ? requiredDone(e) : 0;
-  if (n >= GOOD_MIN) return "good";
-  if (n <= BAD_MAX) return "bad";
-  return "neutral";
+  if (n >= GOOD_MIN) return GAIN;
+  return -LOSS_MAX * (1 - n / GOOD_MIN);
 }
+function isGoodDay(key) { return dayDelta(key) >= GAIN; }
 
 function computeBooster() {
   const keys = Object.keys(data).filter(k => {
@@ -635,24 +659,24 @@ function computeBooster() {
     const [y0, m0, d0] = keys[0].split("-").map(Number);
     const cursor = new Date(y0, m0 - 1, d0);
     while (dateKey(cursor) < tKey) {
-      const s = dayScore(dateKey(cursor));
-      if (s === "good") { power = Math.min(POWER_MAX, power + GAIN); streak++; }
-      else { if (s === "bad") power = Math.max(0, power - LOSS); streak = 0; }
+      const k = dateKey(cursor);
+      power = Math.max(0, Math.min(POWER_MAX, power + dayDelta(k)));
+      if (isGoodDay(k)) streak++; else streak = 0;
       cursor.setDate(cursor.getDate() + 1);
     }
   }
   // Heute zählt nur positiv, sobald das Soll erreicht ist (kein Abzug für einen laufenden Tag)
-  if (dayScore(tKey) === "good") { power = Math.min(POWER_MAX, power + GAIN); streak++; }
-  return { power, streak };
+  if (isGoodDay(tKey)) { power = Math.min(POWER_MAX, power + GAIN); streak++; }
+  return { power: Math.round(power * 10) / 10, streak };
 }
 
 function boosterFigureSVG(m) {
-  const sh = 15 + m * 15;          // halbe Schulterbreite
-  const waist = 11 + m * 5;        // halbe Taille
-  const armW = 4.5 + m * 6;
-  const bicepR = 3.5 + m * 6.5;
-  const legW = 6 + m * 5.5;
-  const scale = 0.82 + m * 0.28;
+  const sh = 11 + m * 19;          // halbe Schulterbreite
+  const waist = 8.5 + m * 7.5;     // halbe Taille
+  const armW = 2.8 + m * 7.7;
+  const bicepR = 2 + m * 8;
+  const legW = 4.5 + m * 7;
+  const scale = 0.74 + m * 0.36;
   const flex = m >= 0.55;          // ab "In Form" wird posiert
   const armY = flex ? 30 : 50;     // Faust oben (Pose) oder unten
   const elbowX = sh + 11, fistX = flex ? sh + 9 : sh + 13;
@@ -660,7 +684,7 @@ function boosterFigureSVG(m) {
     '<path d="M ' + (50 + sgn * (sh - 2)) + ' 31 L ' + (50 + sgn * elbowX) + ' 44 L ' + (50 + sgn * fistX) + " " + armY +
     '" fill="none" stroke="currentColor" stroke-width="' + armW + '" stroke-linecap="round" stroke-linejoin="round"/>' +
     '<circle cx="' + (50 + sgn * (sh + 4)) + '" cy="' + (flex ? 39 : 37) + '" r="' + bicepR + '" fill="currentColor"/>';
-  return '<svg viewBox="0 0 100 120" aria-hidden="true">' +
+  return '<svg viewBox="-11 0 122 120" aria-hidden="true">' +
     '<g transform="translate(50 116) scale(' + scale.toFixed(3) + ') translate(-50 -116)">' +
     '<ellipse cx="50" cy="114" rx="' + (20 + m * 10) + '" ry="4" fill="currentColor" opacity="0.15"/>' +
     '<circle cx="50" cy="13" r="9" fill="currentColor"/>' +
@@ -674,7 +698,8 @@ function boosterFigureSVG(m) {
 
 document.getElementById("boosterHint").textContent =
   "Guter Tag = mindestens " + GOOD_MIN + " von " + REQUIRED.length +
-  " Übungen oder ein Pilates Workout · bei 0–1 Übungen schrumpft der Muskel wieder etwas";
+  " Übungen oder ein Pilates Workout (+1) · an schwächeren Tagen schrumpft der Muskel wieder – " +
+  "je weniger Übungen, desto stärker, ganz ohne Training −1 pro Tag";
 
 function renderBooster() {
   const { power, streak } = computeBooster();
@@ -744,7 +769,8 @@ function renderMonth() {
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
   const tKey = todayKey();
   let statFull = 0, statAny = 0, feelSum = 0, feelCount = 0;
-  const factorCounts = { schmerzmittel: 0, physio: 0, anstrengend: 0 };
+  const factorCounts = {};
+  FACTORS.forEach(f => { factorCounts[f.id] = 0; });
 
   for (let i = 0; i < offset; i++) {
     const el = document.createElement("div");
@@ -782,32 +808,79 @@ function renderMonth() {
   document.getElementById("statFull").textContent = statFull;
   document.getElementById("statAny").textContent = statAny;
   document.getElementById("statFeel").textContent = feelCount ? (feelSum / feelCount).toFixed(1) : "–";
-  document.getElementById("statSchmerz").textContent = factorCounts.schmerzmittel;
-  document.getElementById("statPhysio").textContent = factorCounts.physio;
-  document.getElementById("statSteh").textContent = factorCounts.anstrengend;
+  document.getElementById("factorStats").innerHTML = FACTORS.map(f =>
+    '<div class="stat"><div class="val" style="color:' + f.color + '">' + factorCounts[f.id] +
+    '</div><div class="lbl">' + f.icon + " " + (f.short || f.name) + "</div></div>").join("");
   renderDayDetail();
 }
 
 function renderDayDetail() {
   const box = document.getElementById("dayDetail");
-  if (!selectedKey) { box.classList.remove("show"); return; }
+  if (!selectedKey) { box.classList.remove("show"); box.innerHTML = ""; return; }
   const [y, m, d] = selectedKey.split("-").map(Number);
   const e = data[selectedKey] || { done: [], feel: null, factors: [] };
-  const feelTxt = e.feel ? "Gefühl: " + e.feel + "/10" : "Kein Gefühls-Wert";
-  let html = "<h3>" + d + ". " + MONTHS[m - 1] + " " + y + " · " + feelTxt + "</h3><ul>";
-  EXERCISES.forEach(ex => {
-    const ok = e.done.includes(ex.id);
-    html += '<li class="' + (ok ? "ok" : "miss") + '">' + ex.name + "</li>";
-  });
-  html += "</ul>";
-  const fs = e.factors || [];
-  if (fs.length) {
-    html += '<ul style="margin-top:8px">' + FACTORS.filter(f => fs.includes(f.id))
-      .map(f => '<li style="color:' + f.color + '">' + f.icon + " " + f.name + "</li>").join("") + "</ul>";
-  }
-  box.innerHTML = html;
+  const tKey = todayKey();
+  const dateTxt = d + ". " + MONTHS[m - 1] + " " + y;
   box.classList.add("show");
+
+  if (selectedKey > tKey) {
+    box.innerHTML = "<h3>" + dateTxt + "</h3>" +
+      '<div class="note">Dieser Tag liegt noch in der Zukunft – eintragen kannst Du ab dem Tag selbst.</div>';
+    return;
+  }
+
+  let html = "<h3>" + dateTxt + (selectedKey === tKey ? " · Heute" : "") + "</h3>" +
+    '<div class="note">Antippen zum Nachtragen – alles lässt sich jederzeit wieder ändern.</div>';
+
+  html += '<div class="group">Rücken-Gefühl</div><div class="scale">';
+  for (let i = 1; i <= 10; i++) {
+    html += '<button data-feel="' + i + '"' + (e.feel === i ? ' class="sel"' : "") + ">" + i + "</button>";
+  }
+  html += '</div><div class="scale-labels"><span>schlecht</span><span>super</span></div>';
+
+  html += '<div class="group">Übungen</div>';
+  let workoutLabel = false;
+  EXERCISES.forEach(ex => {
+    if (ex.workout && !workoutLabel) { html += '<div class="group">Workouts</div>'; workoutLabel = true; }
+    html += '<div class="exercise' + (e.done.includes(ex.id) ? " done" : "") + '" data-ex="' + ex.id + '">' +
+      exerciseInnerHTML(ex) + "</div>";
+  });
+
+  html += '<div class="group">Notizen zum Tag</div><div class="chips">';
+  const fs = e.factors || [];
+  FACTORS.forEach(f => {
+    html += '<button data-factor="' + f.id + '" style="--factor-color:' + f.color + '"' +
+      (fs.includes(f.id) ? ' class="sel"' : "") + ">" + factorInnerHTML(f) + "</button>";
+  });
+  html += "</div>";
+
+  html += '<div class="day-sum">' + requiredDone(e) + " von " + REQUIRED.length + " Übungen · " +
+    (isGoodDay(selectedKey) ? "zählt als guter Tag für den Booster" : "zählt (noch) nicht als guter Tag") +
+    "</div>";
+
+  box.innerHTML = html;
 }
+
+/* Antippen im Nachtrag-Bereich – funktioniert auch für vergangene Tage */
+document.getElementById("dayDetail").addEventListener("click", (ev) => {
+  if (!selectedKey || selectedKey > todayKey()) return;
+  const feelBtn = ev.target.closest("[data-feel]");
+  const exRow = ev.target.closest("[data-ex]");
+  const facBtn = ev.target.closest("[data-factor]");
+  if (!feelBtn && !exRow && !facBtn) return;
+  const e = entry(selectedKey);
+  if (feelBtn) {
+    const v = Number(feelBtn.dataset.feel);
+    e.feel = (e.feel === v) ? null : v;
+  } else if (exRow) {
+    toggleIn(e.done, exRow.dataset.ex);
+  } else {
+    toggleIn(e.factors, facBtn.dataset.factor);
+  }
+  save();
+  renderToday();
+  renderMonth();
+});
 
 /* ---------- Tabs & Kopfzeile ---------- */
 const tabToday = document.getElementById("tabToday");
@@ -829,9 +902,13 @@ function renderHeader() {
 }
 
 /* Beim Zurückkehren in die App (z. B. nach Mitternacht) neu rendern */
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden) { renderHeader(); renderToday(); setToCurrentMonth(); }
-});
+function refreshAll() {
+  renderHeader();
+  renderToday();
+  if (document.getElementById("viewMonth").classList.contains("active")) renderMonth();
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshAll(); });
+window.addEventListener("pageshow", refreshAll);
 
 renderHeader();
 renderToday();

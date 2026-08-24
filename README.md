@@ -18,11 +18,16 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
 - **Booster-Anzeige:** Ein Muskel-Männchen, das mit jedem guten
   Trainingstag (mind. 9 von 12 Übungen oder ein Pilates Workout) wächst
   und stärker wird – mit farbigem Booster-Balken (0–10) und
-  Serien-Zähler. An Tagen mit 0–1 Übungen
-  schrumpft der Muskel wieder etwas
+  Serien-Zähler. Jeder Tag zählt: An schwächeren Tagen schrumpft der
+  Muskel wieder, und zwar umso stärker, je weniger Übungen geschafft
+  wurden (ein Tag ganz ohne Training kostet einen vollen Punkt)
+- **Tage nachtragen:** In der Monatsübersicht einen beliebigen Tag
+  antippen – dort lassen sich Übungen, Gefühls-Wert und Notizen
+  rückwirkend eintragen und jederzeit wieder ändern
 - **Tages-Notizen für die Rück-Analyse:** Schmerzmittel genommen,
-  Physio-Termin, anstrengender Tag mit viel Stehen – erscheinen als
-  farbige Punkte im Kalender und als Zähler in der Monatsstatistik
+  Voltaren aufgetragen, Physio-Termin, anstrengender Tag mit viel
+  Stehen – erscheinen als farbige Punkte im Kalender und als Zähler in
+  der Monatsstatistik
 - **Gefühls-Skala 1–10:** Beim Öffnen der App wählst Du mit einem Tipp,
   wie es Dir körperlich (Rücken) gerade geht
 - **Monatsübersicht:** Kalender, der zeigt, an welchen Tagen Du trainiert
