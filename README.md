@@ -12,10 +12,13 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   in Bauchlage, Beinheben in Seitenlage (Thera-Band), Beindrehen in
   Seitenlage (Thera-Band), Beinheben nach hinten, Schulterbrücke – plus
   die Workouts
-  Pilates und Indoor Cycling (Cycling zählt nicht zum Tages-Soll)
+  Pilates, Indoor Cycling und Nordic Walking / Wandern / strammes Gehen
+  (mind. 30 Minuten) – Cycling und Gehen zählen als Extra nicht zum
+  Tages-Soll
 - **Booster-Anzeige:** Ein Muskel-Männchen, das mit jedem guten
-  Trainingstag (mind. 7 Übungen) wächst und stärker wird – mit farbigem
-  Booster-Balken (0–10) und Serien-Zähler. An Tagen mit 0–1 Übungen
+  Trainingstag (mind. 9 von 12 Übungen oder ein Pilates Workout) wächst
+  und stärker wird – mit farbigem Booster-Balken (0–10) und
+  Serien-Zähler. An Tagen mit 0–1 Übungen
   schrumpft der Muskel wieder etwas
 - **Tages-Notizen für die Rück-Analyse:** Schmerzmittel genommen,
   Physio-Termin, anstrengender Tag mit viel Stehen – erscheinen als
