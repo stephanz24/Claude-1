@@ -33,6 +33,11 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   wie es Dir körperlich (Rücken) gerade geht
 - **Monatsübersicht:** Kalender, der zeigt, an welchen Tagen Du trainiert
   hast (grün = alles geschafft, gelb = teilweise) plus Dein Tages-Gefühl
+- **Verlaufs-Diagramm:** Zeigt den Gefühls-Wert als Kurve – wahlweise
+  Tag für Tag im gewählten Monat oder als Monats-Durchschnitt über die
+  letzten zwölf Monate. Darunter ein Streifen, der pro Tag anzeigt, wie
+  viele Übungen geschafft wurden (je dunkler, desto mehr); Antippen oder
+  Wischen zeigt die Werte des einzelnen Tages
 - **Statistik:** Tage komplett, Tage trainiert, durchschnittliches Gefühl
 - **Offline-fähig:** Funktioniert auch ohne Internet, alle Daten bleiben
   lokal auf Deinem iPhone (localStorage) – nichts wird irgendwohin gesendet

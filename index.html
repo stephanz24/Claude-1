@@ -366,6 +366,67 @@
   #dayDetail .day-sum { color: var(--muted); font-size: 0.8rem; margin-top: 12px; }
   .stats-row.factors { grid-template-columns: 1fr 1fr; }
 
+  /* Verlaufs-Diagramm */
+  :root { --chart-line: #3d7fc4; --chart-train: #26a077; }
+  @media (prefers-color-scheme: dark) {
+    :root { --chart-line: #4e93da; --chart-train: #2ea57f; }
+  }
+  .range-tabs { display: flex; gap: 8px; margin-bottom: 10px; }
+  .range-tabs button {
+    flex: 1;
+    border: 1.5px solid var(--line);
+    background: transparent;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 4px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .range-tabs button.sel { border-color: var(--green); color: var(--green); }
+  .chart-wrap { position: relative; touch-action: pan-y; }
+  .chart-wrap svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart-grid { stroke: var(--line); stroke-width: 1; }
+  .chart-axis { fill: var(--muted); font-size: 8px; font-family: inherit; }
+  .chart-area { fill: var(--chart-line); opacity: 0.12; }
+  .chart-path { fill: none; stroke: var(--chart-line); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .chart-dot { fill: var(--chart-line); stroke: var(--card); stroke-width: 2; }
+  .chart-avg { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.7; }
+  .chart-cell { fill: var(--chart-train); }
+  .chart-cursor line { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 2; }
+  .chart-cursor circle { fill: var(--chart-line); stroke: var(--card); stroke-width: 2.5; }
+  .chart-tip {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--bg);
+    font-size: 0.72rem;
+    line-height: 1.35;
+    padding: 6px 9px;
+    border-radius: 8px;
+    pointer-events: none;
+    white-space: nowrap;
+    display: none;
+    z-index: 2;
+  }
+  .chart-tip b { font-weight: 700; }
+  .chart-legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: 0.75rem;
+    margin-top: 10px;
+  }
+  .chart-legend span { display: flex; align-items: center; gap: 6px; }
+  .chart-legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .chart-legend i.line { background: var(--chart-line); border-radius: 50%; }
+  .chart-legend i.train { background: var(--chart-train); }
+  .chart-note { color: var(--muted); font-size: 0.78rem; margin-top: 8px; }
+  .chart-empty { color: var(--muted); font-size: 0.85rem; padding: 24px 0; text-align: center; }
+
   .stats-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -484,6 +545,21 @@
       </div>
       <div id="dayDetail"></div>
     </div>
+    <div class="card">
+      <h2>Verlauf: Wie geht es Dir?</h2>
+      <div class="sub">Dein Gefühls-Wert über die Zeit – darunter, wie viel Du trainiert hast</div>
+      <div class="range-tabs" id="rangeTabs">
+        <button data-range="month" class="sel">Monat</button>
+        <button data-range="year">12 Monate</button>
+      </div>
+      <div class="chart-wrap" id="chartWrap"><div class="chart-tip" id="chartTip"></div></div>
+      <div class="chart-legend">
+        <span><i class="line"></i> Gefühl 1–10</span>
+        <span><i class="train"></i> Training (je dunkler, desto mehr Übungen)</span>
+      </div>
+      <div class="chart-note" id="chartNote"></div>
+    </div>
+
     <div class="stats-row">
       <div class="stat"><div class="val" id="statFull">0</div><div class="lbl">Tage komplett</div></div>
       <div class="stat"><div class="val" id="statAny">0</div><div class="lbl">Tage trainiert</div></div>
@@ -808,11 +884,13 @@ function renderMonth() {
 
   document.getElementById("statFull").textContent = statFull;
   document.getElementById("statAny").textContent = statAny;
-  document.getElementById("statFeel").textContent = feelCount ? (feelSum / feelCount).toFixed(1) : "–";
+  document.getElementById("statFeel").textContent =
+    feelCount ? (feelSum / feelCount).toFixed(1).replace(".", ",") : "–";
   document.getElementById("factorStats").innerHTML = FACTORS.map(f =>
     '<div class="stat"><div class="val" style="color:' + f.color + '">' + factorCounts[f.id] +
     '</div><div class="lbl">' + f.icon + " " + (f.short || f.name) + "</div></div>").join("");
   renderDayDetail();
+  renderChart();
 }
 
 function renderDayDetail() {
@@ -881,6 +959,230 @@ document.getElementById("dayDetail").addEventListener("click", (ev) => {
   save();
   renderToday();
   renderMonth();
+});
+
+/* ---------- Verlaufs-Diagramm ---------- */
+const CH = { w: 340, x0: 26, x1: 330, yTop: 12, yBot: 130, labelY: 145, stripY: 152, stripH: 12 };
+let chartRange = "month";
+
+function feelY(v) { return CH.yBot - ((v - 1) / 9) * (CH.yBot - CH.yTop); }
+
+/* Ein Punkt je Tag des angezeigten Monats */
+function monthSeries(y, m) {
+  const days = new Date(y, m + 1, 0).getDate();
+  const tKey = todayKey();
+  const out = [];
+  for (let d = 1; d <= days; d++) {
+    const key = dateKey(new Date(y, m, d));
+    const e = data[key];
+    const done = e ? requiredDone(e) : 0;
+    out.push({
+      feel: e && e.feel ? e.feel : null,
+      done: done,
+      share: done / REQUIRED.length,
+      future: key > tKey,
+      tip: DOWS[(new Date(y, m, d).getDay() + 6) % 7] + ", " + d + ". " + MONTHS[m],
+      axis: String(d),
+      gap: 1,
+    });
+  }
+  return out;
+}
+
+/* Ein Punkt je Monat – Durchschnitt der letzten zwölf Monate */
+function yearSeries() {
+  const now = new Date();
+  const tKey = todayKey();
+  const out = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const y = d.getFullYear(), m = d.getMonth();
+    const days = new Date(y, m + 1, 0).getDate();
+    let sum = 0, cnt = 0, shareSum = 0, elapsed = 0;
+    for (let day = 1; day <= days; day++) {
+      const key = dateKey(new Date(y, m, day));
+      if (key > tKey) break;
+      elapsed++;
+      const e = data[key];
+      if (e && e.feel) { sum += e.feel; cnt++; }
+      if (e) shareSum += requiredDone(e) / REQUIRED.length;
+    }
+    out.push({
+      feel: cnt ? sum / cnt : null,
+      done: cnt,
+      share: elapsed ? shareSum / elapsed : 0,
+      future: false,
+      tip: MONTHS[m] + " " + y,
+      axis: MONTHS[m].slice(0, 3),
+      gap: 1,
+      days: cnt,
+    });
+  }
+  return out;
+}
+
+let chartPoints = [];
+
+function renderChart() {
+  const wrap = document.getElementById("chartWrap");
+  const tip = document.getElementById("chartTip");
+  const note = document.getElementById("chartNote");
+  const pts = chartRange === "year" ? yearSeries() : monthSeries(calYear, calMonth);
+  chartPoints = pts;
+  tip.style.display = "none";
+
+  const withFeel = pts.filter(p => p.feel !== null);
+  if (!withFeel.length) {
+    wrap.innerHTML = '<div class="chart-empty">Noch keine Gefühls-Werte in diesem Zeitraum.<br>Tippe oben im Kalender einen Tag an, um ihn nachzutragen.</div>';
+    wrap.appendChild(tip);
+    note.textContent = "";
+    return;
+  }
+
+  const slot = (CH.x1 - CH.x0) / pts.length;
+  const cx = i => CH.x0 + (i + 0.5) * slot;
+  const avg = withFeel.reduce((a, p) => a + p.feel, 0) / withFeel.length;
+
+  let svg = '<svg viewBox="0 0 ' + CH.w + ' 170" role="img" aria-label="Verlauf des Gefühls-Werts">';
+
+  // Raster und Achsenbeschriftung links
+  [2, 4, 6, 8, 10].forEach(v => {
+    const y = feelY(v);
+    svg += '<line class="chart-grid" x1="' + CH.x0 + '" y1="' + y.toFixed(1) + '" x2="' + CH.x1 + '" y2="' + y.toFixed(1) + '"/>' +
+      '<text class="chart-axis" x="' + (CH.x0 - 6) + '" y="' + (y + 3).toFixed(1) + '" text-anchor="end">' + v + "</text>";
+  });
+
+  // Linie in Abschnitte teilen: längere Lücken werden nicht überbrückt
+  const maxGap = chartRange === "year" ? 1 : 3;
+  const segs = [];
+  let seg = [];
+  let lastIdx = null;
+  pts.forEach((p, i) => {
+    if (p.feel === null) return;
+    if (lastIdx !== null && i - lastIdx > maxGap) { segs.push(seg); seg = []; }
+    seg.push({ x: cx(i), y: feelY(p.feel) });
+    lastIdx = i;
+  });
+  if (seg.length) segs.push(seg);
+
+  segs.forEach(sg => {
+    const d = sg.map((q, i) => (i ? "L" : "M") + q.x.toFixed(1) + " " + q.y.toFixed(1)).join(" ");
+    if (sg.length > 1) {
+      svg += '<path class="chart-area" d="' + d + " L" + sg[sg.length - 1].x.toFixed(1) + " " + CH.yBot +
+        " L" + sg[0].x.toFixed(1) + " " + CH.yBot + ' Z"/>';
+    }
+    svg += '<path class="chart-path" d="' + d + '"/>';
+  });
+
+  // Durchschnittslinie
+  const ay = feelY(avg);
+  svg += '<line class="chart-avg" x1="' + CH.x0 + '" y1="' + ay.toFixed(1) + '" x2="' + CH.x1 + '" y2="' + ay.toFixed(1) + '"/>' +
+    '<text class="chart-axis" x="' + CH.x1 + '" y="' + (ay - 4).toFixed(1) + '" text-anchor="end">Ø ' +
+    avg.toFixed(1).replace(".", ",") + "</text>";
+
+  // Punkte
+  const r = chartRange === "year" ? 4 : (pts.length > 20 ? 2.6 : 3.4);
+  pts.forEach((p, i) => {
+    if (p.feel === null) return;
+    svg += '<circle class="chart-dot" cx="' + cx(i).toFixed(1) + '" cy="' + feelY(p.feel).toFixed(1) + '" r="' + r + '"/>';
+  });
+
+  // Trainings-Streifen unter der Achse (eigene Skala, keine zweite Y-Achse)
+  const cellW = Math.max(2, slot - 2);
+  pts.forEach((p, i) => {
+    if (p.future || p.share <= 0) return;
+    svg += '<rect class="chart-cell" x="' + (cx(i) - cellW / 2).toFixed(1) + '" y="' + CH.stripY +
+      '" width="' + cellW.toFixed(1) + '" height="' + CH.stripH + '" rx="2" opacity="' +
+      (0.2 + 0.8 * Math.min(1, p.share)).toFixed(2) + '"/>';
+  });
+
+  // X-Beschriftung
+  const every = chartRange === "year" ? 1 : (pts.length > 20 ? 7 : 5);
+  pts.forEach((p, i) => {
+    if (chartRange === "month" && i !== 0 && (i + 1) % every !== 0) return;
+    svg += '<text class="chart-axis" x="' + cx(i).toFixed(1) + '" y="' + CH.labelY + '" text-anchor="middle">' + p.axis + "</text>";
+  });
+
+  // Fadenkreuz für Tipp-/Wischgeste
+  svg += '<g class="chart-cursor" id="chartCursor" style="display:none">' +
+    '<line id="cursorLine" x1="0" y1="' + CH.yTop + '" x2="0" y2="' + (CH.stripY + CH.stripH) + '"/>' +
+    '<circle id="cursorDot" cx="0" cy="0" r="5"/></g></svg>';
+
+  wrap.innerHTML = svg;
+  wrap.appendChild(tip);
+
+  // Begleittext
+  const vals = withFeel.map(p => p.feel);
+  if (chartRange === "year") {
+    const tage = pts.reduce((a, p) => a + (p.days || 0), 0);
+    note.textContent = "Ø " + avg.toFixed(1).replace(".", ",") + " über " + withFeel.length +
+      " Monate · " + tage + " Tage bewertet";
+  } else {
+    note.textContent = "Ø " + avg.toFixed(1).replace(".", ",") + " · " + withFeel.length + " von " +
+      pts.length + " Tagen bewertet · höchster " + Math.max(...vals) + ", niedrigster " + Math.min(...vals);
+  }
+}
+
+/* Antippen oder Wischen zeigt den Wert des jeweiligen Punkts */
+(function setupChartTouch() {
+  const wrap = document.getElementById("chartWrap");
+  const tip = document.getElementById("chartTip");
+
+  function hide() {
+    tip.style.display = "none";
+    const cur = document.getElementById("chartCursor");
+    if (cur) cur.style.display = "none";
+  }
+  function show(ev) {
+    const cur = document.getElementById("chartCursor");
+    if (!cur || !chartPoints.length) return;
+    const rect = wrap.getBoundingClientRect();
+    const vbX = ((ev.clientX - rect.left) / rect.width) * CH.w;
+    const slot = (CH.x1 - CH.x0) / chartPoints.length;
+    let i = Math.floor((vbX - CH.x0) / slot);
+    i = Math.max(0, Math.min(chartPoints.length - 1, i));
+    const p = chartPoints[i];
+    const x = CH.x0 + (i + 0.5) * slot;
+    document.getElementById("cursorLine").setAttribute("x1", x);
+    document.getElementById("cursorLine").setAttribute("x2", x);
+    const dot = document.getElementById("cursorDot");
+    if (p.feel !== null) {
+      dot.setAttribute("cx", x);
+      dot.setAttribute("cy", feelY(p.feel));
+      dot.style.display = "";
+    } else {
+      dot.style.display = "none";
+    }
+    cur.style.display = "";
+
+    let txt = "<b>" + p.tip + "</b><br>";
+    if (chartRange === "year") {
+      txt += p.feel === null ? "kein Gefühls-Wert" : "Ø Gefühl " + p.feel.toFixed(1).replace(".", ",") +
+        " aus " + p.days + (p.days === 1 ? " Tag" : " Tagen");
+      txt += "<br>Ø " + Math.round(p.share * REQUIRED.length) + " von " + REQUIRED.length + " Übungen pro Tag";
+    } else {
+      txt += p.feel === null ? "kein Gefühls-Wert" : "Gefühl " + p.feel + " von 10";
+      txt += "<br>" + p.done + " von " + REQUIRED.length + " Übungen";
+    }
+    tip.innerHTML = txt;
+    tip.style.display = "block";
+    const px = (x / CH.w) * rect.width;
+    tip.style.left = Math.max(60, Math.min(rect.width - 60, px)) + "px";
+  }
+
+  wrap.addEventListener("pointerdown", (ev) => { show(ev); wrap.setPointerCapture(ev.pointerId); });
+  wrap.addEventListener("pointermove", (ev) => { if (ev.buttons || ev.pointerType === "mouse") show(ev); });
+  wrap.addEventListener("pointerup", hide);
+  wrap.addEventListener("pointercancel", hide);
+  wrap.addEventListener("pointerleave", hide);
+})();
+
+document.getElementById("rangeTabs").addEventListener("click", (ev) => {
+  const b = ev.target.closest("[data-range]");
+  if (!b) return;
+  chartRange = b.dataset.range;
+  [...ev.currentTarget.children].forEach(c => c.classList.toggle("sel", c === b));
+  renderChart();
 });
 
 /* ---------- Tabs & Kopfzeile ---------- */
