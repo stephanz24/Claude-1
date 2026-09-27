@@ -427,6 +427,21 @@
   .chart-note { color: var(--muted); font-size: 0.78rem; margin-top: 8px; }
   .chart-empty { color: var(--muted); font-size: 0.85rem; padding: 24px 0; text-align: center; }
 
+  .primary-btn {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    background: var(--green);
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 13px;
+    cursor: pointer;
+  }
+  .primary-btn:active { background: var(--green-dark); }
+
   .stats-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -566,6 +581,13 @@
       <div class="stat"><div class="val" id="statFeel">–</div><div class="lbl">Ø Gefühl</div></div>
     </div>
     <div class="stats-row factors" id="factorStats"></div>
+
+    <div class="card">
+      <h2>Daten sichern</h2>
+      <div class="sub">Kopiert alle Einträge als Text – zum Übertragen in die iPhone-App (Mehr → Aus der Web-App übernehmen) oder als Sicherung</div>
+      <button class="primary-btn" id="exportBtn">Daten exportieren</button>
+      <div class="chart-note" id="exportNote"></div>
+    </div>
   </section>
 </main>
 
@@ -1183,6 +1205,26 @@ document.getElementById("rangeTabs").addEventListener("click", (ev) => {
   chartRange = b.dataset.range;
   [...ev.currentTarget.children].forEach(c => c.classList.toggle("sel", c === b));
   renderChart();
+});
+
+/* ---------- Export ---------- */
+document.getElementById("exportBtn").addEventListener("click", async () => {
+  const note = document.getElementById("exportNote");
+  const text = JSON.stringify(data);
+  const days = Object.keys(data).length;
+  try {
+    await navigator.clipboard.writeText(text);
+    note.textContent = days + " Tage in die Zwischenablage kopiert – jetzt in der iPhone-App einfügen.";
+    return;
+  } catch (e) { /* Zwischenablage nicht erlaubt – über das Teilen-Menü */ }
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "RückenFit-Daten", text });
+      note.textContent = "Geteilt – den Text in der iPhone-App einfügen.";
+      return;
+    }
+  } catch (e) { if (e && e.name === "AbortError") return; }
+  note.textContent = "Kopieren war nicht möglich – bitte Safari-Berechtigungen prüfen.";
 });
 
 /* ---------- Tabs & Kopfzeile ---------- */
