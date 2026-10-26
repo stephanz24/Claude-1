@@ -176,8 +176,11 @@
 
   /* Booster */
   .booster { display: flex; align-items: center; gap: 16px; }
-  .booster .figure { flex-shrink: 0; width: 96px; height: 110px; color: var(--green); }
-  .booster .figure svg { width: 100%; height: 100%; }
+  .booster .figure { flex-shrink: 0; width: 124px; height: 132px; }
+  .booster .figure svg { width: 100%; height: 100%; overflow: hidden; }
+  .booster .trend { font-size: 0.78rem; font-weight: 600; margin-top: 6px; color: var(--muted); }
+  .booster .trend.up { color: var(--green); }
+  .booster .trend.down { color: #d0613c; }
   .booster .info { flex: 1; min-width: 0; }
   .booster .level-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 2px; }
   .booster .streak { color: var(--muted); font-size: 0.85rem; margin-bottom: 10px; }
@@ -201,6 +204,80 @@
     margin-top: 6px;
   }
   .booster-hint { color: var(--muted); font-size: 0.75rem; margin-top: 12px; }
+  /* Comic-Booster-Männchen */
+  :root {
+    --bf-ink: #15261f;
+    --bf-skin: #46c793;
+    --bf-band: #e5484d;
+    --bf-shorts: #2f62c0;
+    --bf-gold: #f5b82e;
+  }
+  .bf-body, .bf-skin-fill { fill: var(--bf-skin); stroke: var(--bf-ink); stroke-width: 3.5; stroke-linejoin: round; }
+  .bf-skin-fill { stroke: none; }
+  .bf-ink-fill { fill: var(--bf-ink); }
+  .bf-ink-stroke, .bf-skin-stroke { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .bf-ink-stroke { stroke: var(--bf-ink); }
+  .bf-skin-stroke { stroke: var(--bf-skin); }
+  .bf-detail { fill: none; stroke: var(--bf-ink); stroke-width: 2.2; stroke-linecap: round; opacity: 0.55; }
+  .bf-abs { stroke-width: 1.8; }
+  .bf-shine { fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; opacity: 0.7; }
+  .bf-shorts { fill: var(--bf-shorts); stroke: var(--bf-ink); stroke-width: 3; stroke-linejoin: round; }
+  .bf-shoe { fill: #fff; stroke: var(--bf-ink); stroke-width: 3; }
+  .bf-shoe-stripe { stroke: var(--bf-band); stroke-width: 2.4; stroke-linecap: round; }
+  .bf-band { fill: var(--bf-band); stroke: var(--bf-ink); stroke-width: 2.6; stroke-linejoin: round; }
+  .bf-line { fill: none; stroke: var(--bf-ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .bf-line.bf-thin { stroke-width: 1.6; }
+  .bf-line.bf-bold { stroke-width: 3.2; }
+  .bf-eye { fill: #fff; stroke: var(--bf-ink); stroke-width: 2; }
+  .bf-pupil { fill: var(--bf-ink); }
+  .bf-glint { fill: #fff; }
+  .bf-cheek { fill: #ff7b8a; opacity: 0.55; }
+  .bf-mouth { fill: #7a1f2b; stroke: var(--bf-ink); stroke-width: 2.4; stroke-linejoin: round; }
+  .bf-teeth { fill: #fff; }
+  .bf-tongue { fill: #ff8a95; }
+  .bf-drop { fill: #8fd3ff; stroke: var(--bf-ink); stroke-width: 1.8; }
+  .bf-spark { fill: var(--bf-gold); stroke: var(--bf-ink); stroke-width: 1.4; stroke-linejoin: round; }
+  .bf-shadow { fill: var(--bf-ink); opacity: 0.14; }
+  .bf-burst { fill: var(--bf-gold); stroke: var(--bf-ink); stroke-width: 2.4; stroke-linejoin: round; }
+  .bf-powtext { font: italic 900 12px -apple-system, "Arial Black", sans-serif; fill: var(--bf-band); stroke: var(--bf-ink); stroke-width: 0.8; paint-order: stroke; }
+
+  /* Bewegung */
+  .bf-bob, .bf-sway, .bf-arm, .bf-head, .bf-tails, .bf-eyes, .bf-spark, .bf-pow, .bf-rays, .bf-shadow, .bf-drop, .bf-bicep {
+    transform-box: view-box;
+  }
+  .bf-bob { animation: bfBob 1.6s ease-in-out infinite; }
+  .bf-sway { animation: bfSway 3.4s ease-in-out infinite; transform-origin: 80px 158px; }
+  .bf-shadow { animation: bfShadow 1.6s ease-in-out infinite; transform-origin: 80px 161px; }
+  .bf-flexarm { animation: bfFlex 1.6s ease-in-out infinite; }
+  .bf-bicep { animation: bfPump 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .bf-tails { animation: bfFlutter 0.9s ease-in-out infinite; }
+  .bf-eyes { animation: bfBlink 4.2s infinite; }
+  .bf-spark { animation: bfTwinkle 1.8s ease-in-out infinite; }
+  .bf-drop { animation: bfDrip 2.4s ease-in infinite; }
+  .bf-rays { animation: bfSpin 14s linear infinite; transform-origin: 80px 88px; }
+  .bf-pow { animation: bfPow 1.6s ease-in-out infinite; }
+
+  @keyframes bfBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  @keyframes bfSway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+  @keyframes bfShadow { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.88); } }
+  @keyframes bfFlex { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-6deg); } }
+  @keyframes bfPump { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
+  @keyframes bfFlutter { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(14deg); } }
+  @keyframes bfBlink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+  @keyframes bfTwinkle { 0%, 100% { transform: scale(0.4) rotate(0deg); opacity: 0.2; } 50% { transform: scale(1.1) rotate(45deg); opacity: 1; } }
+  @keyframes bfDrip { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
+  @keyframes bfSpin { to { transform: rotate(360deg); } }
+  @keyframes bfPow { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.12) rotate(-4deg); } }
+
+  @media (prefers-color-scheme: dark) {
+    .bf-figure { filter: url(#bfSticker); }
+    .bf-shadow { fill: #000; opacity: 0.35; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bf-bob, .bf-sway, .bf-shadow, .bf-flexarm, .bf-bicep, .bf-tails, .bf-eyes, .bf-spark, .bf-drop, .bf-rays, .bf-pow { animation: none; }
+  }
+
 
   /* Tages-Notizen (Chips) */
   .chips { display: flex; flex-direction: column; gap: 8px; }
@@ -520,6 +597,7 @@
           <div class="streak" id="boosterStreak"></div>
           <div class="booster-bar"><div id="boosterFill"></div></div>
           <div class="bar-label"><span>0</span><span id="boosterValue"></span><span>10</span></div>
+          <div class="trend" id="boosterTrend"></div>
         </div>
       </div>
       <div class="booster-hint" id="boosterHint"></div>
@@ -731,94 +809,319 @@ function requiredDone(e) {
 }
 
 /* ---------- Booster ---------- */
-const GOOD_MIN = Math.ceil(REQUIRED.length * 0.7); // ab so vielen Übungen zählt der Tag als "gut" (70 %)
-const GAIN = 1, LOSS_MAX = 1, POWER_MAX = 10;
+const GOOD_MIN = Math.ceil(REQUIRED.length * 0.7); // ab so vielen Übungen zählt der Tag voll (70 %)
+const POWER_MAX = 10;
+const BOOST_DAYS = 14;      // so viele Tage fließen in den Booster ein
+const EXTRA_BONUS = 0.3;    // Cycling / Gehen geben je 30 % Bonus
 
-/* Tages-Bilanz: Soll erfüllt (oder Pilates) = +1.
-   Darunter geht es abwärts – je weniger Übungen, desto stärker;
-   ein Tag ganz ohne Training kostet einen vollen Punkt. */
-function dayDelta(key) {
+/* Was ein Tag zählt (0 … 1): anteilig nach Übungen, Pilates zählt voll,
+   Extras geben einen Bonus. 8 von 10 Übungen = 80 %. */
+function dayCredit(key) {
   const e = data[key];
-  if (e && Array.isArray(e.done) && e.done.includes("pilates")) return GAIN; // Pilates-Tag zählt immer voll
-  const n = e ? requiredDone(e) : 0;
-  if (n >= GOOD_MIN) return GAIN;
-  return -LOSS_MAX * (1 - n / GOOD_MIN);
+  if (!e || !Array.isArray(e.done)) return 0;
+  if (e.done.includes("pilates")) return 1;
+  const extras = EXERCISES.filter(ex => ex.optional && e.done.includes(ex.id)).length;
+  return Math.min(1, requiredDone(e) / GOOD_MIN + EXTRA_BONUS * extras);
 }
-function isGoodDay(key) { return dayDelta(key) >= GAIN; }
+function isGoodDay(key) { return dayCredit(key) >= 1; }
+
+/* Gewichteter Schnitt der letzten 14 Tage bis einschließlich "end" –
+   jüngere Tage zählen stärker, damit der Muskel schnell reagiert. */
+function powerEnding(end) {
+  let sum = 0, weights = 0;
+  for (let i = 0; i < BOOST_DAYS; i++) {
+    const d = new Date(end);
+    d.setDate(d.getDate() - i);
+    const w = BOOST_DAYS - i;
+    sum += w * dayCredit(dateKey(d));
+    weights += w;
+  }
+  return POWER_MAX * sum / weights;
+}
+
+const round1 = v => Math.round(v * 10) / 10;
 
 function computeBooster() {
-  const keys = Object.keys(data).filter(k => {
-    const e = data[k];
-    return e && ((e.done && e.done.length) || e.feel || (e.factors && e.factors.length));
-  }).sort();
-  const tKey = todayKey();
-  let power = 0, streak = 0;
-  if (keys.length) {
-    // Alle Tage vom ersten Eintrag bis gestern durchgehen (Lücken = 0 Übungen)
-    const [y0, m0, d0] = keys[0].split("-").map(Number);
-    const cursor = new Date(y0, m0 - 1, d0);
-    while (dateKey(cursor) < tKey) {
-      const k = dateKey(cursor);
-      power = Math.max(0, Math.min(POWER_MAX, power + dayDelta(k)));
-      if (isGoodDay(k)) streak++; else streak = 0;
-      cursor.setDate(cursor.getDate() + 1);
-    }
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const dayBefore = new Date(today);
+  dayBefore.setDate(today.getDate() - 2);
+
+  const pYesterday = powerEnding(yesterday);
+  // Der laufende Tag zählt nur, wenn er nach oben bringt
+  const power = round1(Math.max(pYesterday, powerEnding(today)));
+  const todayGain = round1(power - pYesterday);                       // was heute gebracht hat
+  const yesterdayChange = round1(pYesterday - powerEnding(dayBefore)); // was gestern bewirkt hat
+
+  let streak = isGoodDay(todayKey()) ? 1 : 0;
+  const c = new Date(yesterday);
+  for (let i = 0; i < 3650 && isGoodDay(dateKey(c)); i++) {
+    streak++;
+    c.setDate(c.getDate() - 1);
   }
-  // Heute zählt nur positiv, sobald das Soll erreicht ist (kein Abzug für einen laufenden Tag)
-  if (isGoodDay(tKey)) { power = Math.min(POWER_MAX, power + GAIN); streak++; }
-  return { power: Math.round(power * 10) / 10, streak };
+  return { power, streak, todayGain, yesterdayChange };
 }
 
-function boosterFigureSVG(m) {
-  const sh = 11 + m * 19;          // halbe Schulterbreite
-  const waist = 8.5 + m * 7.5;     // halbe Taille
-  const armW = 2.8 + m * 7.7;
-  const bicepR = 2 + m * 8;
-  const legW = 4.5 + m * 7;
-  const scale = 0.74 + m * 0.36;
-  const flex = m >= 0.55;          // ab "In Form" wird posiert
-  const armY = flex ? 30 : 50;     // Faust oben (Pose) oder unten
-  const elbowX = sh + 11, fistX = flex ? sh + 9 : sh + 13;
-  const arm = (sgn) =>
-    '<path d="M ' + (50 + sgn * (sh - 2)) + ' 31 L ' + (50 + sgn * elbowX) + ' 44 L ' + (50 + sgn * fistX) + " " + armY +
-    '" fill="none" stroke="currentColor" stroke-width="' + armW + '" stroke-linecap="round" stroke-linejoin="round"/>' +
-    '<circle cx="' + (50 + sgn * (sh + 4)) + '" cy="' + (flex ? 39 : 37) + '" r="' + bicepR + '" fill="currentColor"/>';
-  return '<svg viewBox="-11 0 122 120" aria-hidden="true">' +
-    '<g transform="translate(50 116) scale(' + scale.toFixed(3) + ') translate(-50 -116)">' +
-    '<ellipse cx="50" cy="114" rx="' + (20 + m * 10) + '" ry="4" fill="currentColor" opacity="0.15"/>' +
-    '<circle cx="50" cy="13" r="9" fill="currentColor"/>' +
-    '<path d="M ' + (50 - sh) + " 27 Q 50 " + (22 - m * 2) + " " + (50 + sh) + " 27 L " + (50 + waist) + " 72 L " + (50 - waist) +
-    ' 72 Z" fill="currentColor"/>' +
-    arm(-1) + arm(1) +
-    '<path d="M ' + (50 - waist + 3) + ' 70 L ' + (50 - waist - 1) + ' 108" fill="none" stroke="currentColor" stroke-width="' + legW + '" stroke-linecap="round"/>' +
-    '<path d="M ' + (50 + waist - 3) + ' 70 L ' + (50 + waist + 1) + ' 108" fill="none" stroke="currentColor" stroke-width="' + legW + '" stroke-linecap="round"/>' +
-    "</g></svg>";
+function boosterStage(power) {
+  return power < 2 ? 0 : power < 4 ? 1 : power < 6 ? 2 : power < 8 ? 3 : 4;
+}
+
+/* Comic-Booster-Männchen: m = 0 … 1 (Muskelmasse), stage 0 … 4 (Stimmung/Pose), max = Vollausbau */
+function boosterFigureSVG(m, stage, max) {
+  const f = (v) => v.toFixed(1);
+  const cx = 80, shY = 76, waistY = 118;
+  const sh = 17 + m * 19;            // halbe Schulterbreite
+  const waist = 12 + m * 5;          // halbe Taille
+  const armW = 6 + m * 7;            // Armdicke
+  const legW = 9 + m * 6;
+  const headR = 23, headCY = 49;
+  const tired = stage === 0;
+  const P = [];
+
+  // Hintergrund: Strahlenkranz beim Vollausbau
+  if (max) {
+    let rays = "";
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2, b = a + Math.PI / 12;
+      rays += "M80 88 L" + f(80 + Math.cos(a) * 120) + " " + f(88 + Math.sin(a) * 120) +
+        " L" + f(80 + Math.cos(b) * 120) + " " + f(88 + Math.sin(b) * 120) + " Z ";
+    }
+    P.push('<defs><radialGradient id="bfRayFade" cx="80" cy="88" r="84" gradientUnits="userSpaceOnUse">' +
+      '<stop offset="0" stop-color="#f5b82e" stop-opacity="0.55"/><stop offset="1" stop-color="#f5b82e" stop-opacity="0"/>' +
+      '</radialGradient></defs>');
+    P.push('<g class="bf-rays"><path d="' + rays + '" fill="url(#bfRayFade)"/></g>');
+  }
+
+  // Schatten am Boden
+  P.push('<ellipse class="bf-shadow" cx="80" cy="161" rx="' + f(26 + m * 12) + '" ry="5"/>');
+
+  P.push('<defs><filter id="bfSticker" x="-10%" y="-10%" width="120%" height="120%">' +
+    '<feMorphology in="SourceAlpha" operator="dilate" radius="1.8" result="grow"/>' +
+    '<feFlood class="bf-sticker-color" flood-color="#e8efec"/><feComposite in2="grow" operator="in" result="rim"/>' +
+    '<feMerge><feMergeNode in="rim"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>');
+  P.push('<g class="bf-figure"><g class="' + (tired ? "bf-sway" : "bf-bob") + '">');
+
+  // Beine + Schuhe
+  for (const s of [-1, 1]) {
+    const x1 = cx + s * (waist - 5), x2 = cx + s * (waist - 3 + (tired ? 2 : 0));
+    P.push('<path class="bf-ink-stroke" d="M' + f(x1) + " " + (waistY + 10) + " L" + f(x2) + ' 150" stroke-width="' + f(legW + 5) + '"/>');
+    P.push('<path class="bf-skin-stroke" d="M' + f(x1) + " " + (waistY + 10) + " L" + f(x2) + ' 150" stroke-width="' + f(legW) + '"/>');
+    P.push('<ellipse class="bf-shoe" cx="' + f(x2 + s * 3) + '" cy="153" rx="' + f(10 + m * 2) + '" ry="5.5"/>');
+    P.push('<path class="bf-shoe-stripe" d="M' + f(x2 + s * 3 - 5) + " 151 L" + f(x2 + s * 3 + 5) + ' 151"/>');
+  }
+
+  // Rumpf
+  const neckTop = shY - 6 - m * 4;
+  P.push('<path class="bf-body" d="M' + f(cx - sh) + " " + (shY + 4) + " Q" + cx + " " + f(neckTop) + " " + f(cx + sh) + " " + (shY + 4) +
+    " Q" + f(cx + sh + 1) + " " + (shY + 18) + " " + f(cx + waist) + " " + waistY +
+    " L" + f(cx - waist) + " " + waistY + " Q" + f(cx - sh - 1) + " " + (shY + 18) + " " + f(cx - sh) + " " + (shY + 4) + ' Z"/>');
+  // Brust und Bauchmuskeln
+  if (m > 0.3) {
+    const pw = sh * 0.72;
+    P.push('<path class="bf-detail" d="M' + f(cx - pw) + " " + (shY + 14) + " Q" + f(cx - pw / 2) + " " + (shY + 23) + " " + (cx - 2) + " " + (shY + 15) + '"/>');
+    P.push('<path class="bf-detail" d="M' + f(cx + pw) + " " + (shY + 14) + " Q" + f(cx + pw / 2) + " " + (shY + 23) + " " + (cx + 2) + " " + (shY + 15) + '"/>');
+  }
+  if (m > 0.6) {
+    let abs = "M" + cx + " " + (shY + 24) + " L" + cx + " " + (waistY - 5);
+    for (const y of [waistY - 27, waistY - 17]) {
+      abs += " M" + (cx - 9) + " " + (y + 1) + " Q" + (cx - 5.5) + " " + (y - 1.5) + " " + (cx - 2.5) + " " + y +
+        " M" + (cx + 9) + " " + (y + 1) + " Q" + (cx + 5.5) + " " + (y - 1.5) + " " + (cx + 2.5) + " " + y;
+    }
+    P.push('<path class="bf-detail bf-abs" d="' + abs + '"/>');
+  }
+  if (tired) { // kleines Bäuchlein
+    P.push('<path class="bf-detail" d="M' + (cx - 9) + " " + (waistY - 8) + " Q" + cx + " " + (waistY + 1) + " " + (cx + 9) + " " + (waistY - 8) + '"/>');
+  }
+
+  // Shorts
+  P.push('<path class="bf-shorts" d="M' + f(cx - waist - 2) + " " + (waistY - 3) + " L" + f(cx + waist + 2) + " " + (waistY - 3) +
+    " L" + f(cx + waist + 5) + " " + (waistY + 15) + " L" + (cx + 3) + " " + (waistY + 15) + " L" + cx + " " + (waistY + 7) +
+    " L" + (cx - 3) + " " + (waistY + 15) + " L" + f(cx - waist - 5) + " " + (waistY + 15) + ' Z"/>');
+
+  // Arme: Kontur zuerst, dann Füllung – so verschmelzen Arm, Bizeps und Faust
+  const arms = [];
+  for (const s of [-1, 1]) {
+    const flex = stage >= 3 || (stage === 2 && s === 1);
+    const S = [cx + s * (sh - 4), shY + 7];
+    let E, H, B, br;
+    if (flex) {
+      E = [cx + s * (sh + 19), shY + 3];
+      H = [cx + s * (sh + 16), shY - 23];
+      B = [cx + s * (sh + 9), shY - 2];
+      br = 4 + m * 8;
+    } else {
+      E = [cx + s * (sh + 5), shY + (tired ? 30 : 27)];
+      H = [cx + s * (sh + (tired ? 2 : 4)), shY + (tired ? 54 : 49)];
+      B = [cx + s * (sh + 2), shY + 15];
+      br = 3 + m * 5;
+    }
+    arms.push({ s, S, E, H, B, br, flex });
+  }
+  const armPath = (a) => "M" + f(a.S[0]) + " " + f(a.S[1]) + " L" + f(a.E[0]) + " " + f(a.E[1]) + " L" + f(a.H[0]) + " " + f(a.H[1]);
+  const fistR = armW * 0.6 + 3;
+  for (const a of arms) {
+    P.push('<g class="' + (a.flex ? "bf-arm bf-flexarm" : "bf-arm") + '" style="transform-origin:' + f(a.S[0]) + "px " + f(a.S[1]) + 'px">');
+    P.push('<path class="bf-ink-stroke" d="' + armPath(a) + '" stroke-width="' + f(armW + 5) + '"/>');
+    P.push('<circle class="bf-ink-fill" cx="' + f(a.B[0]) + '" cy="' + f(a.B[1]) + '" r="' + f(a.br + 2.5) + '"/>');
+    P.push('<circle class="bf-ink-fill" cx="' + f(a.H[0]) + '" cy="' + f(a.H[1]) + '" r="' + f(fistR + 2.5) + '"/>');
+    P.push('<path class="bf-skin-stroke" d="' + armPath(a) + '" stroke-width="' + f(armW) + '"/>');
+    P.push('<circle class="bf-skin-fill' + (a.flex ? " bf-bicep" : "") + '" cx="' + f(a.B[0]) + '" cy="' + f(a.B[1]) + '" r="' + f(a.br) + '"/>');
+    P.push('<circle class="bf-skin-fill" cx="' + f(a.H[0]) + '" cy="' + f(a.H[1]) + '" r="' + f(fistR) + '"/>');
+    if (a.flex && m > 0.25) { // Glanzlicht auf dem Bizeps
+      P.push('<path class="bf-shine" d="M' + f(a.B[0] - a.s * a.br * 0.35) + " " + f(a.B[1] - a.br * 0.55) +
+        " q" + f(a.s * a.br * 0.3) + " " + f(-a.br * 0.25) + " " + f(a.s * a.br * 0.6) + ' 0"/>');
+    }
+    P.push("</g>");
+  }
+
+  // Kopf
+  P.push('<g class="bf-head" style="transform-origin:80px 66px;' + (tired ? "transform:rotate(-9deg) translateY(3px)" : "") + '">');
+  P.push('<circle class="bf-body" cx="80" cy="' + headCY + '" r="' + headR + '"/>');
+  // Stirnband mit flatternden Enden
+  const y1 = headCY - 19, y2 = headCY - 12;
+  const w1 = Math.sqrt(headR * headR - 19 * 19), w2 = Math.sqrt(headR * headR - 12 * 12);
+  P.push('<path class="bf-band" d="M' + f(80 - w1) + " " + y1 + " L" + f(80 + w1) + " " + y1 + " L" + f(80 + w2) + " " + y2 + " L" + f(80 - w2) + " " + y2 + ' Z"/>');
+  P.push('<g class="bf-tails" style="transform-origin:' + f(80 - w2 + 1) + "px " + (y1 + 3) + 'px">' +
+    '<path class="bf-band" d="M' + f(80 - w2 + 1) + " " + (y1 + 3) + " q-10 -6 -19 -2 l3 5 q8 -2 16 0 Z\"/>" +
+    '<path class="bf-band" d="M' + f(80 - w2 + 1) + " " + (y1 + 4) + " q-8 4 -16 9 l5 3 q6 -5 11 -9 Z\"/>" +
+    "</g>");
+  P.push('<circle class="bf-band" cx="' + f(80 - w2 + 1) + '" cy="' + (y1 + 3.5) + '" r="3.2"/>');
+
+  // Gesicht
+  const ey = headCY - 1;
+  // Augenbrauen
+  const brows = {
+    0: "M66 " + (ey - 7) + " L74 " + (ey - 10) + " M94 " + (ey - 7) + " L86 " + (ey - 10),   // traurig
+    1: "M67 " + (ey - 9) + " L75 " + (ey - 9) + " M85 " + (ey - 9) + " L93 " + (ey - 9),
+    2: "M67 " + (ey - 10) + " L75 " + (ey - 9) + " M85 " + (ey - 9) + " L93 " + (ey - 10),
+    3: "M66 " + (ey - 11) + " L75 " + (ey - 7) + " M85 " + (ey - 7) + " L94 " + (ey - 11),   // entschlossen
+    4: "M66 " + (ey - 11) + " Q71 " + (ey - 15) + " 76 " + (ey - 11) + " M84 " + (ey - 11) + " Q89 " + (ey - 15) + " 94 " + (ey - 11),
+  }[stage];
+  P.push('<path class="bf-line" d="' + brows + '"/>');
+  // Augen
+  if (stage === 0) {
+    for (const x of [71, 89]) {
+      P.push('<path class="bf-eye" d="M' + (x - 5) + " " + ey + " A5 5 0 0 0 " + (x + 5) + " " + ey + ' Z"/>');
+      P.push('<circle class="bf-pupil" cx="' + x + '" cy="' + (ey + 2.6) + '" r="1.8"/>');
+      P.push('<path class="bf-line bf-thin" d="M' + (x - 5) + " " + ey + " L" + (x + 5) + " " + ey + '"/>');
+      P.push('<path class="bf-line bf-thin" d="M' + (x - 4) + " " + (ey + 7.5) + " Q" + x + " " + (ey + 9.5) + " " + (x + 4) + " " + (ey + 7.5) + '"/>');
+    }
+  } else if (stage === 4) {
+    for (const x of [71, 89]) {
+      P.push('<path class="bf-line bf-bold" d="M' + (x - 5) + " " + (ey + 2) + " Q" + x + " " + (ey - 5) + " " + (x + 5) + " " + (ey + 2) + '"/>');
+    }
+  } else {
+    P.push('<g class="bf-eyes" style="transform-origin:80px ' + ey + 'px">');
+    for (const x of [71, 89]) {
+      P.push('<ellipse class="bf-eye" cx="' + x + '" cy="' + ey + '" rx="4.6" ry="5.6"/>');
+      P.push('<circle class="bf-pupil" cx="' + (x + 0.8) + '" cy="' + (ey + 0.8) + '" r="2.4"/>');
+      P.push('<circle class="bf-glint" cx="' + (x + 1.8) + '" cy="' + (ey - 0.6) + '" r="0.9"/>');
+    }
+    P.push("</g>");
+  }
+  // Wangen
+  if (stage >= 3) {
+    P.push('<ellipse class="bf-cheek" cx="63" cy="' + (headCY + 7) + '" rx="4.5" ry="2.6"/>');
+    P.push('<ellipse class="bf-cheek" cx="97" cy="' + (headCY + 7) + '" rx="4.5" ry="2.6"/>');
+  }
+  // Mund
+  const my = headCY + 10;
+  if (stage === 0) {
+    P.push('<path class="bf-line" d="M73 ' + (my + 3) + " Q80 " + (my - 3) + " 87 " + (my + 3) + '"/>');
+  } else if (stage === 1) {
+    P.push('<path class="bf-line" d="M74 ' + (my - 1) + " Q80 " + (my + 3) + " 86 " + (my - 1) + '"/>');
+  } else if (stage === 2) {
+    P.push('<path class="bf-line" d="M71 ' + (my - 2) + " Q80 " + (my + 6) + " 89 " + (my - 2) + '"/>');
+  } else {
+    const wide = stage === 4 ? 12 : 9, deep = stage === 4 ? 12 : 8;
+    P.push('<path class="bf-mouth" d="M' + (80 - wide) + " " + (my - 3) + " Q80 " + (my + deep) + " " + (80 + wide) + " " + (my - 3) + ' Z"/>');
+    P.push('<path class="bf-teeth" d="M' + (80 - wide + 2) + " " + (my - 2.6) + " L" + (80 + wide - 2) + " " + (my - 2.6) +
+      " L" + (80 + wide - 3.5) + " " + (my + 0.8) + " L" + (80 - wide + 3.5) + " " + (my + 0.8) + ' Z"/>');
+    if (stage === 4) P.push('<ellipse class="bf-tongue" cx="80" cy="' + (my + 5) + '" rx="5" ry="2.4"/>');
+  }
+  P.push("</g>"); // Kopf
+
+  // Schweißtropfen beim schlappen Männchen
+  if (tired) {
+    P.push('<path class="bf-drop" d="M104 33 C109 41 109 45 104 45 C99 45 99 41 104 33 Z"/>');
+  }
+  P.push("</g></g>"); // bob + figure
+
+  // Funkeln ab Stufe 3
+  if (stage >= 3) {
+    const star = (x, y, r) => "M" + x + " " + (y - r) + " Q" + x + " " + y + " " + (x + r) + " " + y + " Q" + x + " " + y + " " + x + " " + (y + r) +
+      " Q" + x + " " + y + " " + (x - r) + " " + y + " Q" + x + " " + y + " " + x + " " + (y - r) + " Z";
+    const spots = max ? [[22, 46, 7], [138, 104, 5], [20, 112, 5]] : [[22, 46, 7], [140, 30, 6], [138, 104, 5], [20, 112, 5]];
+    spots.forEach(([x, y, r], i) => {
+      P.push('<path class="bf-spark" style="animation-delay:' + (i * 0.35) + "s;transform-origin:" + x + "px " + y + 'px" d="' + star(x, y, r) + '"/>');
+    });
+  }
+
+  // POW!-Explosion beim Vollausbau
+  if (max) {
+    let burst = "";
+    for (let i = 0; i < 16; i++) {
+      const a = (i / 16) * Math.PI * 2, r = i % 2 ? 13 : 22;
+      burst += (i ? "L" : "M") + f(127 + Math.cos(a) * r * 1.15) + " " + f(23 + Math.sin(a) * r) + " ";
+    }
+    P.push('<g class="bf-pow" style="transform-origin:127px 23px"><path class="bf-burst" d="' + burst + 'Z"/>' +
+      '<text class="bf-powtext" x="127" y="27.5" text-anchor="middle" transform="rotate(10 127 23)">POW!</text></g>');
+  }
+
+  return '<svg viewBox="0 0 160 170" aria-hidden="true">' + P.join("") + "</svg>";
 }
 
 document.getElementById("boosterHint").textContent =
-  "Guter Tag = mindestens " + GOOD_MIN + " von " + REQUIRED.length +
-  " Übungen oder ein Pilates Workout (+1) · an schwächeren Tagen schrumpft der Muskel wieder – " +
-  "je weniger Übungen, desto stärker, ganz ohne Training −1 pro Tag";
+  "Der Booster zeigt, wie regelmäßig Du in den letzten zwei Wochen trainiert hast – die letzten Tage zählen am meisten. " +
+  GOOD_MIN + " von " + REQUIRED.length + " Übungen oder Pilates = voller Tag, weniger zählt anteilig, " +
+  "Indoor Cycling und Gehen geben einen Bonus. Pausen lassen den Muskel schrumpfen.";
 
+let lastFigure = "";
 function renderBooster() {
-  const { power, streak } = computeBooster();
+  const { power, streak, todayGain, yesterdayChange } = computeBooster();
   const m = power / POWER_MAX;
-  document.getElementById("boosterFigure").innerHTML = boosterFigureSVG(m);
-  const names = ["Aufwärmen", "Auf dem Weg", "In Form", "Stark", "Booster-Modus 💪"];
-  const name = power >= POWER_MAX ? "Maximal-Booster 🔥" : names[Math.min(4, Math.floor(m * 5))];
-  document.getElementById("boosterName").textContent = name;
+  const stage = boosterStage(power);
+  const max = power >= POWER_MAX;
+
+  // Nur neu zeichnen, wenn sich etwas ändert – sonst springt die Animation
+  const svg = boosterFigureSVG(m, stage, max);
+  if (svg !== lastFigure) {
+    document.getElementById("boosterFigure").innerHTML = svg;
+    lastFigure = svg;
+  }
+
+  const names = ["Schlappi 😮‍💨", "Aufgewacht", "In Form", "Kraftpaket", "Booster-Modus 💪"];
+  document.getElementById("boosterName").textContent = max ? "Maximal-Booster 🔥" : names[stage];
   document.getElementById("boosterStreak").textContent =
-    streak === 0 ? "Noch kein guter Tag in Folge – heute geht's los!"
-    : streak === 1 ? "1 guter Tag in Folge"
-    : streak + " gute Tage in Folge";
+    streak === 0 ? "Noch kein voller Tag in Folge – heute geht's los!"
+    : streak === 1 ? "1 voller Tag in Folge"
+    : streak + " volle Tage in Folge";
+
   const hue = 15 + m * 115; // rot-orange -> grün
   const fill = document.getElementById("boosterFill");
   fill.style.width = (m * 100) + "%";
-  fill.style.background = power >= POWER_MAX
+  fill.style.background = max
     ? "linear-gradient(90deg, hsl(130 55% 42%), #f0b429)"
     : "hsl(" + Math.round(hue) + " 60% 45%)";
   document.getElementById("boosterValue").textContent =
-    (power % 1 === 0 ? power : power.toFixed(1)) + " / " + POWER_MAX;
+    (power % 1 === 0 ? power : power.toFixed(1).replace(".", ",")) + " / " + POWER_MAX;
+
+  const trend = document.getElementById("boosterTrend");
+  const fmt = v => Math.abs(v).toFixed(1).replace(".", ",");
+  if (todayGain > 0) {
+    trend.className = "trend up";
+    trend.textContent = "▲ " + fmt(todayGain) + " durch heute";
+  } else if (yesterdayChange > 0) {
+    trend.className = "trend up";
+    trend.textContent = "▲ " + fmt(yesterdayChange) + " durch gestern";
+  } else if (yesterdayChange < 0) {
+    trend.className = "trend down";
+    trend.textContent = "▼ " + fmt(yesterdayChange) + " durch gestern – heute zurückholen!";
+  } else {
+    trend.className = "trend";
+    trend.textContent = "unverändert seit gestern";
+  }
 }
 
 function renderToday() {
@@ -956,7 +1259,8 @@ function renderDayDetail() {
   html += "</div>";
 
   html += '<div class="day-sum">' + requiredDone(e) + " von " + REQUIRED.length + " Übungen · " +
-    (isGoodDay(selectedKey) ? "zählt als guter Tag für den Booster" : "zählt (noch) nicht als guter Tag") +
+    (isGoodDay(selectedKey) ? "zählt voll für den Booster"
+      : "zählt zu " + Math.round(dayCredit(selectedKey) * 100) + " % für den Booster") +
     "</div>";
 
   box.innerHTML = html;

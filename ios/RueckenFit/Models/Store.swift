@@ -66,48 +66,79 @@ final class Store {
 
     // MARK: - Booster
 
-    static let gain = 1.0
-    static let lossMax = 1.0
     static let powerMax = 10.0
+    /// So viele Tage fließen in den Booster ein
+    static let boostDays = 14
+    /// Indoor Cycling / Gehen geben je 30 % Bonus
+    static let extraBonus = 0.3
 
-    /// Tages-Bilanz: Soll erfüllt (oder Pilates) = +1. Darunter geht es
-    /// abwärts – je weniger Übungen, desto stärker; ganz ohne Training −1.
-    func dayDelta(_ key: String) -> Double {
-        guard let e = entries[key] else { return -Store.lossMax }
-        if e.done.contains("pilates") { return Store.gain }
-        let n = e.requiredDone
-        if n >= Catalog.goodMin { return Store.gain }
-        return -Store.lossMax * (1 - Double(n) / Double(Catalog.goodMin))
+    /// Was ein Tag zählt (0 … 1): anteilig nach Übungen, Pilates zählt voll,
+    /// Extras geben einen Bonus. 8 von 10 Übungen = 80 %.
+    func dayCredit(_ key: String) -> Double {
+        guard let e = entries[key] else { return 0 }
+        if e.done.contains("pilates") { return 1 }
+        let extras = Catalog.exercises.filter { $0.isOptional && e.done.contains($0.id) }.count
+        let share = Double(e.requiredDone) / Double(Catalog.goodMin)
+        return min(1, share + Store.extraBonus * Double(extras))
     }
 
-    func isGoodDay(_ key: String) -> Bool { dayDelta(key) >= Store.gain }
+    func isGoodDay(_ key: String) -> Bool { dayCredit(key) >= 1 }
+
+    /// Gewichteter Schnitt der letzten 14 Tage bis einschließlich `end` –
+    /// jüngere Tage zählen stärker, damit der Muskel schnell reagiert.
+    func powerEnding(_ end: Date) -> Double {
+        var sum = 0.0
+        var weights = 0.0
+        for i in 0..<Store.boostDays {
+            let weight = Double(Store.boostDays - i)
+            sum += weight * dayCredit(DayKey.key(DayKey.shift(end, days: -i)))
+            weights += weight
+        }
+        return Store.powerMax * sum / weights
+    }
 
     struct Booster {
         var power: Double
         var streak: Int
+        /// Was der heutige Tag gebracht hat
+        var todayGain: Double
+        /// Was gestern bewirkt hat (wird gezeigt, solange heute noch nichts zählt)
+        var yesterdayChange: Double
         var fraction: Double { power / Store.powerMax }
+
+        /// 0 Schlappi … 4 Booster-Modus
+        var stage: Int {
+            switch power {
+            case ..<2: return 0
+            case ..<4: return 1
+            case ..<6: return 2
+            case ..<8: return 3
+            default: return 4
+            }
+        }
+        var isMax: Bool { power >= Store.powerMax }
     }
 
     func booster() -> Booster {
-        let keys = entries.filter { !$0.value.isEmpty }.keys.sorted()
-        let today = todayKey
-        var power = 0.0
-        var streak = 0
-        if let first = keys.first, var cursor = DayKey.date(first) {
-            // Alle Tage vom ersten Eintrag bis gestern (Lücken = kein Training)
-            while DayKey.key(cursor) < today {
-                let k = DayKey.key(cursor)
-                power = max(0, min(Store.powerMax, power + dayDelta(k)))
-                if isGoodDay(k) { streak += 1 } else { streak = 0 }
-                cursor = DayKey.shift(cursor, days: 1)
-            }
-        }
-        // Heute zählt nur positiv, sobald das Soll erreicht ist
-        if isGoodDay(today) {
-            power = min(Store.powerMax, power + Store.gain)
+        let today = DayKey.date(todayKey) ?? Date()
+        let yesterday = DayKey.shift(today, days: -1)
+        let dayBefore = DayKey.shift(today, days: -2)
+        let round1: (Double) -> Double = { ($0 * 10).rounded() / 10 }
+
+        let pYesterday = powerEnding(yesterday)
+        // Der laufende Tag zählt nur, wenn er nach oben bringt
+        let power = round1(max(pYesterday, powerEnding(today)))
+        let todayGain = round1(power - pYesterday)
+        let yesterdayChange = round1(pYesterday - powerEnding(dayBefore))
+
+        var streak = isGoodDay(todayKey) ? 1 : 0
+        var cursor = yesterday
+        for _ in 0..<3650 {
+            guard isGoodDay(DayKey.key(cursor)) else { break }
             streak += 1
+            cursor = DayKey.shift(cursor, days: -1)
         }
-        return Booster(power: (power * 10).rounded() / 10, streak: streak)
+        return Booster(power: power, streak: streak, todayGain: todayGain, yesterdayChange: yesterdayChange)
     }
 
     // MARK: - Import / Export (kompatibel zur Web-App)

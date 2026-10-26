@@ -28,7 +28,8 @@ struct DayEditorView: View {
                     FactorChips(key: key)
 
                     Text("\(entry.requiredDone) von \(Catalog.required.count) Übungen · " +
-                         (store.isGoodDay(key) ? "zählt als guter Tag für den Booster" : "zählt (noch) nicht als guter Tag"))
+                         (store.isGoodDay(key) ? "zählt voll für den Booster"
+                          : "zählt zu \(Int((store.dayCredit(key) * 100).rounded())) % für den Booster"))
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .padding(.top, 14)
