@@ -31,7 +31,7 @@ enum Catalog {
         Exercise(id: "seitplanke", name: "Seitplanke", hint: "rechts und links"),
         Exercise(id: "kaefer", name: "Großer Käfer"),
         Exercise(id: "beinheben_bauch", name: "Beinheben in Bauchlage", hint: "aus der Hüfte, li + re – nicht aus dem Rücken"),
-        Exercise(id: "beinheben_seite", name: "Beinheben in Seitenlage", hint: "Thera-Band überm Knie, Hüfte vorne lassen"),
+        Exercise(id: "kniebeugen", name: "Kniebeugen", hint: "Gewicht auf den Fersen, Knie über den Füßen, Rücken gerade"),
         Exercise(id: "beindrehen_seite", name: "Beindrehen in Seitenlage", hint: "Bein hinten nach oben drehen, mit Thera-Band"),
         Exercise(id: "schulterbruecke", name: "Schulterbrücke"),
         Exercise(id: "pilates", name: "Pilates Workout", isWorkout: true),

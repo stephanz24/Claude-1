@@ -9,9 +9,8 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
 - **Tägliche Übungsliste zum Abhaken:** Transversus aktivieren und
   Bauchatmung (zuerst), Stretching in die Seite (li + re, Innenseiten
   der Oberschenkel), Streckung des Hüftbeugers (Dehnung), Liegestütze,
-  Planke, Seitplanke, Großer Käfer, Beinheben in Bauchlage, Beinheben
-  in Seitenlage (Thera-Band), Beindrehen in Seitenlage (Thera-Band),
-  Schulterbrücke – plus
+  Planke, Seitplanke, Großer Käfer, Beinheben in Bauchlage, Kniebeugen,
+  Beindrehen in Seitenlage (Thera-Band), Schulterbrücke – plus
   die Workouts
   Pilates, Indoor Cycling und Nordic Walking / Wandern / strammes Gehen
   (mind. 30 Minuten) – Cycling und Gehen zählen als Extra nicht zum
