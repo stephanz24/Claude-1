@@ -10,13 +10,13 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   Bauchatmung (zuerst), Stretching in die Seite (li + re, Innenseiten
   der Oberschenkel), Streckung des Hüftbeugers (Dehnung), Liegestütze,
   Planke, Seitplanke, Großer Käfer, Beinheben in Bauchlage, Kniebeugen,
-  Beindrehen in Seitenlage (Thera-Band), Schulterbrücke – plus
+  Beinpresse, Beindrehen in Seitenlage (Thera-Band), Schulterbrücke – plus
   die Workouts
   Pilates, Indoor Cycling und Nordic Walking / Wandern / strammes Gehen
   (mind. 30 Minuten) – Cycling und Gehen zählen als Extra nicht zum
   Tages-Soll
 - **Booster-Anzeige:** Ein Muskel-Männchen, das mit jedem guten
-  Trainingstag (mind. 10 von 13 Übungen oder ein Pilates Workout) wächst
+  Trainingstag (mind. 10 von 14 Übungen oder ein Pilates Workout) wächst
   und stärker wird – mit farbigem Booster-Balken (0–10) und
   Serien-Zähler. Jeder Tag zählt: An schwächeren Tagen schrumpft der
   Muskel wieder, und zwar umso stärker, je weniger Übungen geschafft
