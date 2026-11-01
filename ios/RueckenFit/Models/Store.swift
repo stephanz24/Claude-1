@@ -141,6 +141,34 @@ final class Store {
         return Booster(power: power, streak: streak, todayGain: todayGain, yesterdayChange: yesterdayChange)
     }
 
+    // MARK: - Serien je Übung
+
+    /// Wie viele Tage am Stück wurde die Übung bis einschließlich `end` gemacht?
+    func exerciseStreak(_ id: String, until end: Date) -> Int {
+        var count = 0
+        var cursor = end
+        for _ in 0..<3650 {
+            guard entries[DayKey.key(cursor)]?.done.contains(id) == true else { break }
+            count += 1
+            cursor = DayKey.shift(cursor, days: -1)
+        }
+        return count
+    }
+
+    struct StreakInfo {
+        let count: Int
+        /// false = Serie bis gestern, die heute noch fortgesetzt werden kann
+        let active: Bool
+    }
+
+    func streakInfo(_ id: String) -> StreakInfo {
+        let today = DayKey.date(todayKey) ?? Date()
+        if entry(todayKey).done.contains(id) {
+            return StreakInfo(count: exerciseStreak(id, until: today), active: true)
+        }
+        return StreakInfo(count: exerciseStreak(id, until: DayKey.shift(today, days: -1)), active: false)
+    }
+
     // MARK: - Import / Export (kompatibel zur Web-App)
 
     func exportJSON() -> String {

@@ -7,6 +7,7 @@ struct SelectedDay: Identifiable {
 
 struct OverviewView: View {
     @Environment(Store.self) private var store
+    @Environment(Celebration.self) private var celebration
     @State private var monthStart: Date = DayKey.startOfMonth(Date())
     @State private var selected: SelectedDay? = nil
 
@@ -31,6 +32,8 @@ struct OverviewView: View {
         .background(Theme.background)
         .sheet(item: $selected) { day in
             DayEditorView(key: day.key)
+                .environment(store)
+                .environment(celebration)
                 .presentationDragIndicator(.visible)
         }
     }

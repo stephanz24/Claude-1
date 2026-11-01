@@ -46,5 +46,6 @@ struct DayEditorView: View {
                 }
             }
         }
+        .overlay { CelebrationOverlay() }
     }
 }

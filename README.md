@@ -9,18 +9,23 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
 - **Tägliche Übungsliste zum Abhaken:** Transversus aktivieren und
   Bauchatmung (zuerst), Stretching in die Seite (li + re, Innenseiten
   der Oberschenkel), Streckung des Hüftbeugers (Dehnung), Liegestütze,
-  Planke, Seitplanke, Großer Käfer, Beinheben in Bauchlage, Superman,
+  Planke, Seitplanke, Großer Käfer, Sit-ups, Beinheben in Bauchlage, Superman,
   Kniebeugen, Beinpresse, Beindrehen in Seitenlage (Thera-Band), Schulterbrücke – plus
   die Workouts
   Pilates, Indoor Cycling und Nordic Walking / Wandern / strammes Gehen
   (mind. 30 Minuten) – Cycling und Gehen zählen als Extra nicht zum
   Tages-Soll
 - **Booster-Anzeige:** Ein Muskel-Männchen, das mit jedem guten
-  Trainingstag (mind. 11 von 15 Übungen oder ein Pilates Workout) wächst
+  Trainingstag (mind. 12 von 16 Übungen oder ein Pilates Workout) wächst
   und stärker wird – mit farbigem Booster-Balken (0–10) und
   Serien-Zähler. Jeder Tag zählt: An schwächeren Tagen schrumpft der
   Muskel wieder, und zwar umso stärker, je weniger Übungen geschafft
   wurden (ein Tag ganz ohne Training kostet einen vollen Punkt)
+- **Symbole und Serien:** Jede Übung hat ein eigenes Symbol, farbig nach
+  Mobilisieren, Dehnen, Kräftigen und Workout. Eine Flamme zeigt, wie
+  viele Tage am Stück eine Übung gemacht wurde (⏳ = heute noch
+  fortsetzen). Bei 3, 5, 7, 10, 14, 21, 30 … Tagen gibt es eine Feier mit
+  Konfetti und einem Titel wie „Wochen-Held“
 - **Tage nachtragen:** In der Monatsübersicht einen beliebigen Tag
   antippen – dort lassen sich Übungen, Gefühls-Wert und Notizen
   rückwirkend eintragen und jederzeit wieder ändern

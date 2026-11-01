@@ -94,15 +94,20 @@ struct FeelScale: View {
     }
 }
 
-/// Eine Übung mit rundem Häkchen-Feld
+/// Eine Übung mit rundem Häkchen-Feld, Symbol und Serien-Flamme
 struct ExerciseRow: View {
     let exercise: Exercise
     let done: Bool
+    var streak: Store.StreakInfo? = nil
     let action: () -> Void
+
+    private static let chipBackground = Color.adaptive(light: 0xFFF1E6, dark: 0x4A2A17)
+    private static let chipText = Color.adaptive(light: 0xA8461A, dark: 0xFFC59E)
+    private static let chipBorder = Color.adaptive(light: 0xE0956A, dark: 0xB8683C)
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 14) {
+            HStack(spacing: 12) {
                 ZStack {
                     Circle().stroke(done ? Theme.green : Theme.line, lineWidth: 2)
                     if done {
@@ -114,11 +119,19 @@ struct ExerciseRow: View {
                 }
                 .frame(width: 30, height: 30)
 
+                ExerciseIcon(id: exercise.id)
+                    .opacity(done ? 0.55 : 1)
+
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(exercise.name)
-                        .font(.body.weight(.medium))
-                        .strikethrough(done)
-                        .foregroundStyle(done ? Color.secondary : Color.primary)
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text(exercise.name)
+                            .font(.body.weight(.medium))
+                            .strikethrough(done)
+                            .foregroundStyle(done ? Color.secondary : Color.primary)
+                        if let streak, streak.count >= 2 {
+                            streakChip(streak)
+                        }
+                    }
                     if let hint = exercise.hint {
                         Text(hint)
                             .font(.caption)
@@ -132,12 +145,32 @@ struct ExerciseRow: View {
         }
         .buttonStyle(.plain)
     }
+
+    /// 🔥 = Serie läuft, ⏳ = Serie bis gestern, heute abhaken zum Fortsetzen
+    private func streakChip(_ streak: Store.StreakInfo) -> some View {
+        Text("🔥 \(streak.count)" + (streak.active ? "" : " ⏳"))
+            .font(.caption2.weight(.bold))
+            .foregroundStyle(Self.chipText)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 2)
+            .background(streak.active ? Self.chipBackground : Color.clear, in: Capsule())
+            .overlay(
+                Capsule().strokeBorder(streak.active ? Color.clear : Self.chipBorder,
+                                       style: StrokeStyle(lineWidth: 1.5, dash: [3, 2]))
+            )
+            .fixedSize()
+            .accessibilityLabel(streak.active
+                ? "\(streak.count) Tage am Stück"
+                : "Serie von \(streak.count) Tagen, heute abhaken zum Fortsetzen")
+    }
 }
 
 /// Die komplette Übungsliste für einen Tag, mit Abschnitt "Workouts"
 struct ExerciseList: View {
     let key: String
+    var showStreaks: Bool = false
     @Environment(Store.self) private var store
+    @Environment(Celebration.self) private var celebration
 
     var body: some View {
         let entry = store.entry(key)
@@ -146,8 +179,12 @@ struct ExerciseList: View {
                 if exercise.isWorkout && (index == 0 || !Catalog.exercises[index - 1].isWorkout) {
                     SectionLabel("Workouts")
                 }
-                ExerciseRow(exercise: exercise, done: entry.done.contains(exercise.id)) {
+                ExerciseRow(exercise: exercise,
+                            done: entry.done.contains(exercise.id),
+                            streak: showStreaks ? store.streakInfo(exercise.id) : nil) {
+                    let before = store.streakInfo(exercise.id).count
                     store.toggleExercise(exercise.id, on: key)
+                    celebration.check(store: store, exerciseID: exercise.id, before: before)
                 }
                 if index < Catalog.exercises.count - 1 {
                     Divider()

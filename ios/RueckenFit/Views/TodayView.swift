@@ -21,7 +21,7 @@ struct TodayView: View {
                 BoosterCard()
 
                 Card(title: "Deine Übungen heute", subtitle: "Einfach antippen zum Abhaken") {
-                    ExerciseList(key: key)
+                    ExerciseList(key: key, showStreaks: true)
                     ProgressRow(done: entry.requiredDone, total: Catalog.required.count)
                 }
 
