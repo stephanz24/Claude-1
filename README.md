@@ -16,7 +16,7 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   (mind. 30 Minuten) – Cycling und Gehen zählen als Extra nicht zum
   Tages-Soll
 - **Booster-Anzeige:** Ein Muskel-Männchen, das mit jedem guten
-  Trainingstag (mind. 12 von 16 Übungen oder ein Pilates Workout) wächst
+  Trainingstag (mind. 10 Übungen oder ein Pilates Workout) wächst
   und stärker wird – mit farbigem Booster-Balken (0–10) und
   Serien-Zähler. Jeder Tag zählt: An schwächeren Tagen schrumpft der
   Muskel wieder, und zwar umso stärker, je weniger Übungen geschafft

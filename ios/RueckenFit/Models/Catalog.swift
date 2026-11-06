@@ -44,8 +44,8 @@ enum Catalog {
 
     static let required: [Exercise] = exercises.filter { !$0.isOptional }
 
-    /// Ab so vielen Übungen zählt der Tag als "gut" (70 % des Solls, aufgerundet)
-    static let goodMin: Int = Int((Double(required.count) * 0.7).rounded(.up))
+    /// Ab 10 Übungen zählt der Tag voll – fest, egal wie lang die Liste wird
+    static let goodMin: Int = min(10, required.count)
 
     static let factors: [Factor] = [
         Factor(id: "schmerzmittel", name: "Schmerzmittel genommen", short: "Schmerzmittel", icon: "💊", color: Color(hex: 0xE05D5D)),

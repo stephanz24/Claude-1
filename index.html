@@ -1033,7 +1033,7 @@ function requiredDone(e) {
 }
 
 /* ---------- Booster ---------- */
-const GOOD_MIN = Math.ceil(REQUIRED.length * 0.7); // ab so vielen Übungen zählt der Tag voll (70 %)
+const GOOD_MIN = Math.min(10, REQUIRED.length); // ab 10 Übungen zählt der Tag voll – fest, egal wie lang die Liste wird
 const POWER_MAX = 10;
 const BOOST_DAYS = 14;      // so viele Tage fließen in den Booster ein
 const EXTRA_BONUS = 0.3;    // Cycling / Gehen geben je 30 % Bonus

@@ -1,4 +1,4 @@
-const CACHE = "rueckenfit-v19";
+const CACHE = "rueckenfit-v20";
 const ASSETS = [
   ".",
   "index.html",
