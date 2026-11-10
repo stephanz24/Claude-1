@@ -42,6 +42,10 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   letzten zwölf Monate. Darunter ein Streifen, der pro Tag anzeigt, wie
   viele Übungen geschafft wurden (je dunkler, desto mehr); Antippen oder
   Wischen zeigt die Werte des einzelnen Tages
+- **Übungen im Überblick:** Balkendiagramm in der Übersicht, wie oft jede
+  Übung gemacht wurde – im angezeigten Monat oder insgesamt seit Beginn,
+  sortiert nach Häufigkeit, mit Anteil der Tage und Pokal für die
+  Spitzenreiter
 - **Statistik:** Tage komplett, Tage trainiert, durchschnittliches Gefühl
 - **Offline-fähig:** Funktioniert auch ohne Internet, alle Daten bleiben
   lokal auf Deinem iPhone (localStorage) – nichts wird irgendwohin gesendet

@@ -24,6 +24,8 @@ struct OverviewView: View {
 
                 TrendChartCard(monthStart: monthStart)
 
+                ExerciseStatsCard(monthStart: monthStart)
+
                 StatsSection(monthStart: monthStart)
             }
             .padding(.horizontal, 16)

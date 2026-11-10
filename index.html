@@ -592,6 +592,36 @@
   .chart-note { color: var(--muted); font-size: 0.78rem; margin-top: 8px; }
   .chart-empty { color: var(--muted); font-size: 0.85rem; padding: 24px 0; text-align: center; }
 
+  /* Übungen im Überblick */
+  .ex-hero { display: flex; gap: 18px; margin: 4px 0 14px; }
+  .ex-hero div { display: flex; flex-direction: column; }
+  .ex-hero b { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+  .ex-hero span { color: var(--muted); font-size: 0.75rem; }
+  .ex-bars { display: flex; flex-direction: column; gap: 9px; }
+  .ex-row { display: grid; grid-template-columns: 26px 1fr auto; gap: 10px; align-items: center; }
+  .ex-row .ex-icon { width: 26px; height: 26px; }
+  .ex-legacy-icon { width: 26px; height: 26px; border-radius: 50%; background: color-mix(in srgb, var(--muted) 40%, transparent); }
+  .ex-mid { min-width: 0; }
+  .ex-name { font-size: 0.82rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+  .ex-name.zero { color: var(--muted); }
+  .ex-track { height: 10px; border-radius: 5px; background: color-mix(in srgb, var(--line) 60%, transparent); overflow: hidden; }
+  .ex-fill {
+    height: 100%;
+    min-width: 4px;
+    border-radius: 5px;
+    background: var(--c);
+    transform-origin: left center;
+    animation: exGrow 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d) both;
+  }
+  .ex-num { text-align: right; min-width: 52px; }
+  .ex-num b { font-size: 0.95rem; font-weight: 800; }
+  .ex-num span { display: block; color: var(--muted); font-size: 0.68rem; }
+  .ex-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: 0.72rem; margin-top: 14px; }
+  .ex-legend span { display: flex; align-items: center; gap: 5px; }
+  .ex-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  @keyframes exGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) { .ex-fill { animation: none; } }
+
   .primary-btn {
     display: block;
     width: 100%;
@@ -741,6 +771,16 @@
       <div class="chart-note" id="chartNote"></div>
     </div>
 
+    <div class="card">
+      <h2>Deine Übungen im Überblick</h2>
+      <div class="sub" id="exStatsSub"></div>
+      <div class="range-tabs" id="exRangeTabs">
+        <button data-range="month" class="sel">Dieser Monat</button>
+        <button data-range="all">Insgesamt</button>
+      </div>
+      <div id="exStats"></div>
+    </div>
+
     <div class="stats-row">
       <div class="stat"><div class="val" id="statFull">0</div><div class="lbl">Tage komplett</div></div>
       <div class="stat"><div class="val" id="statAny">0</div><div class="lbl">Tage trainiert</div></div>
@@ -813,7 +853,7 @@ const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-wid
 /* Übungs-Symbole: Strichmännchen in der Übungs-Pose, 24 × 24, nur absolute M/L/Q/C/Z-Befehle
    (die iPhone-App liest dieselben Pfade). head = Kopf [x, y], fill = gefüllte Formen. */
 const ICON_CATS = {
-  mobil:   { color: "#1c8fa3", label: "Mobilisieren" },
+  mobil:   { color: "#0a8fa9", label: "Mobilisieren" },
   dehnen:  { color: "#8459c4", label: "Dehnen" },
   kraft:   { color: "#d2602a", label: "Kräftigen" },
   workout: { color: "#3570c9", label: "Workout" },
@@ -1454,6 +1494,7 @@ function renderMonth() {
     '</div><div class="lbl">' + f.icon + " " + (f.short || f.name) + "</div></div>").join("");
   renderDayDetail();
   renderChart();
+  renderExerciseStats();
 }
 
 function renderDayDetail() {
@@ -1746,6 +1787,103 @@ function renderChart() {
   wrap.addEventListener("pointercancel", hide);
   wrap.addEventListener("pointerleave", hide);
 })();
+
+/* ---------- Übungen im Überblick ---------- */
+let exRange = "month";
+const LEGACY_EXERCISES = { beinheben_seite: "Beinheben in Seitenlage", beinheben_hinten: "Beinheben nach hinten" };
+
+function exerciseStats() {
+  const tKey = todayKey();
+  let keys = [], periodDays = 0, since = null;
+  if (exRange === "month") {
+    const days = new Date(calYear, calMonth + 1, 0).getDate();
+    for (let d = 1; d <= days; d++) {
+      const k = dateKey(new Date(calYear, calMonth, d));
+      if (k > tKey) break;
+      keys.push(k);
+    }
+    periodDays = keys.length;
+  } else {
+    const first = Object.keys(data).filter(k => k <= tKey).sort()[0];
+    if (first) {
+      since = first;
+      const [y, m, d] = first.split("-").map(Number);
+      const c = new Date(y, m - 1, d);
+      while (dateKey(c) <= tKey) { keys.push(dateKey(c)); c.setDate(c.getDate() + 1); }
+    }
+    periodDays = keys.length;
+  }
+  const counts = {};
+  let total = 0, trainedDays = 0;
+  keys.forEach(k => {
+    const e = data[k];
+    if (!e || !Array.isArray(e.done) || !e.done.length) return;
+    trainedDays++;
+    e.done.forEach(id => { counts[id] = (counts[id] || 0) + 1; total++; });
+  });
+  return { counts, total, trainedDays, periodDays, since };
+}
+
+function renderExerciseStats() {
+  const box = document.getElementById("exStats");
+  const sub = document.getElementById("exStatsSub");
+  const { counts, total, trainedDays, periodDays, since } = exerciseStats();
+
+  if (exRange === "month") {
+    sub.textContent = "Wie oft Du jede Übung im " + MONTHS[calMonth] + " " + calYear + " gemacht hast";
+  } else if (since) {
+    const [y, m, d] = since.split("-").map(Number);
+    sub.textContent = "Seit dem " + d + ". " + MONTHS[m - 1] + " " + y + " – " + periodDays + " Tage";
+  } else {
+    sub.textContent = "Seit Beginn";
+  }
+
+  if (!periodDays) {
+    box.innerHTML = '<div class="chart-empty">Dieser Monat liegt noch in der Zukunft.</div>';
+    return;
+  }
+  if (!total) {
+    box.innerHTML = '<div class="chart-empty">In diesem Zeitraum ist noch keine Übung abgehakt.</div>';
+    return;
+  }
+
+  // Aktuelle Übungen nach Häufigkeit, bei Gleichstand in Listen-Reihenfolge; frühere Übungen danach
+  const rows = EXERCISES.map((ex, i) => ({ id: ex.id, name: ex.name, n: counts[ex.id] || 0, order: i, legacy: false }))
+    .sort((a, b) => b.n - a.n || a.order - b.order);
+  Object.keys(LEGACY_EXERCISES).forEach(id => {
+    if (counts[id]) rows.push({ id, name: LEGACY_EXERCISES[id], n: counts[id], legacy: true });
+  });
+  const top = rows[0].n;
+
+  let html = '<div class="ex-hero"><div><b>' + total + '</b><span>Übungen abgehakt</span></div>' +
+    "<div><b>" + trainedDays + '</b><span>von ' + periodDays + " Tagen trainiert</span></div></div>";
+  html += '<div class="ex-bars">';
+  rows.forEach((r, i) => {
+    const pct = Math.round(r.n / periodDays * 100);
+    const color = r.legacy ? "var(--muted)" : ICON_CATS[ICONS[r.id].cat].color;
+    const icon = r.legacy ? '<div class="ex-legacy-icon"></div>' : exerciseIconSVG(r.id);
+    const label = r.name + (r.legacy ? " (früher)" : "") + (r.n && r.n === top && !r.legacy ? " 🏆" : "");
+    html += '<div class="ex-row" title="' + r.name + ": an " + r.n + " von " + periodDays + " Tagen (" + pct + ' %)">' +
+      icon + '<div class="ex-mid"><div class="ex-name' + (r.n ? "" : " zero") + '">' + label + "</div>" +
+      '<div class="ex-track">' + (r.n ? '<div class="ex-fill" style="width:' + Math.max(pct, 2) + "%;--c:" + color +
+      ";--d:" + (i * 35) + 'ms"></div>' : "") + "</div></div>" +
+      '<div class="ex-num"><b>' + r.n + "×</b><span>" + pct + " %</span></div></div>";
+  });
+  html += "</div>";
+  html += '<div class="ex-legend">' + Object.values(ICON_CATS).map(c =>
+    '<span><i style="background:' + c.color + '"></i>' + c.label + "</span>").join("") +
+    (rows.some(r => r.legacy) ? '<span><i style="background:var(--muted)"></i>Frühere Übung</span>' : "") +
+    "<span>% = Anteil der Tage im Zeitraum</span></div>";
+  box.innerHTML = html;
+}
+
+document.getElementById("exRangeTabs").addEventListener("click", (ev) => {
+  const b = ev.target.closest("[data-range]");
+  if (!b) return;
+  exRange = b.dataset.range;
+  [...ev.currentTarget.children].forEach(c => c.classList.toggle("sel", c === b));
+  renderExerciseStats();
+});
 
 document.getElementById("rangeTabs").addEventListener("click", (ev) => {
   const b = ev.target.closest("[data-range]");

@@ -61,7 +61,7 @@ enum Catalog {
 
         var color: Color {
             switch self {
-            case .mobil: return Color(hex: 0x1C8FA3)
+            case .mobil: return Color(hex: 0x0A8FA9)
             case .dehnen: return Color(hex: 0x8459C4)
             case .kraft: return Color(hex: 0xD2602A)
             case .workout: return Color(hex: 0x3570C9)
@@ -98,6 +98,16 @@ enum Catalog {
     ]
 
     // MARK: Serien-Belohnung
+
+    /// Übungen, die es früher gab – für die Gesamt-Statistik
+    static let legacyExercises: [(id: String, name: String)] = [
+        ("beinheben_seite", "Beinheben in Seitenlage"),
+        ("beinheben_hinten", "Beinheben nach hinten"),
+    ]
+
+    static let categoryLegend: [(label: String, category: IconCategory)] = [
+        ("Mobilisieren", .mobil), ("Dehnen", .dehnen), ("Kräftigen", .kraft), ("Workout", .workout),
+    ]
 
     static let milestones: [Int] = [3, 5, 7, 10, 14, 21, 30, 50, 75, 100, 150, 200, 365]
 
