@@ -42,10 +42,14 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   letzten zwölf Monate. Darunter ein Streifen, der pro Tag anzeigt, wie
   viele Übungen geschafft wurden (je dunkler, desto mehr); Antippen oder
   Wischen zeigt die Werte des einzelnen Tages
-- **Übungen im Überblick:** Balkendiagramm in der Übersicht, wie oft jede
-  Übung gemacht wurde – im angezeigten Monat oder insgesamt seit Beginn,
-  sortiert nach Häufigkeit, mit Anteil der Tage und Pokal für die
-  Spitzenreiter
+- **Übungen im Überblick:** In der Web-App eine Übungs-Spirale (D3.js):
+  ein leuchtender Strahl pro Übung, im Uhrzeigersinn nach Häufigkeit
+  sortiert. Alle Strahlen sind gleich dick, nur die Länge zeigt den Wert
+  (linear, mit Messringen bei 25/50/75/100 % der Tage); außen stehen
+  Symbol und genaue Anzahl. Antippen zeigt in der Mitte Name, Anzahl,
+  Anteil und Platz. Darunter die genaue Liste zum Aufklappen. Umschaltbar
+  zwischen angezeigtem Monat und insgesamt. In der iPhone-App als
+  Balkendiagramm
 - **Statistik:** Tage komplett, Tage trainiert, durchschnittliches Gefühl
 - **Offline-fähig:** Funktioniert auch ohne Internet, alle Daten bleiben
   lokal auf Deinem iPhone (localStorage) – nichts wird irgendwohin gesendet
@@ -71,9 +75,12 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
 ## Technik
 
 - Eine einzige `index.html` mit HTML, CSS und JavaScript – keine
-  Frameworks, keine Abhängigkeiten
+  Frameworks; einzige Bibliothek ist D3.js für die Übungs-Spirale
 - `manifest.webmanifest` + `sw.js` (Service Worker) machen daraus eine
   installierbare, offline-fähige PWA
+- `vendor/d3.v7.min.js`: D3.js 7.9.2 (ISC-Lizenz, siehe
+  `vendor/d3-LICENSE.txt`) liegt lokal in der App und wird vom Service
+  Worker zwischengespeichert, damit die Spirale auch offline funktioniert
 - Daten werden pro Tag unter dem Schlüssel `rueckenfit-v1` im
   localStorage gespeichert
 

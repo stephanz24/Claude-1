@@ -1,8 +1,9 @@
-const CACHE = "rueckenfit-v21";
+const CACHE = "rueckenfit-v22";
 const ASSETS = [
   ".",
   "index.html",
   "manifest.webmanifest",
+  "vendor/d3.v7.min.js",
   "icons/icon-192.png",
   "icons/icon-512.png",
   "icons/apple-touch-icon.png",
