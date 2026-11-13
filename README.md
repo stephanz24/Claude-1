@@ -15,12 +15,18 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   Pilates, Indoor Cycling und Nordic Walking / Wandern / strammes Gehen
   (mind. 30 Minuten) – Cycling und Gehen zählen als Extra nicht zum
   Tages-Soll
-- **Booster-Anzeige:** Ein Muskel-Männchen, das mit jedem guten
-  Trainingstag (mind. 10 Übungen oder ein Pilates Workout) wächst
-  und stärker wird – mit farbigem Booster-Balken (0–10) und
-  Serien-Zähler. Jeder Tag zählt: An schwächeren Tagen schrumpft der
-  Muskel wieder, und zwar umso stärker, je weniger Übungen geschafft
-  wurden (ein Tag ganz ohne Training kostet einen vollen Punkt)
+- **Booster-Bühne:** Ein animiertes Comic-Männchen lebt auf einer kleinen
+  Bühne: Es läuft herum, macht Kniebeugen, Hampelmänner, Curls, tanzt,
+  trinkt, gähnt oder schläft – je nach Form. Es redet in Sprechblasen,
+  begrüßt Dich, jubelt bei jeder abgehakten Übung und feiert volle Tage.
+  Antippen bringt es zum Posen. Ab bestimmten Booster-Werten schaltet es
+  Ausrüstung frei (Schweißbänder 3, Hantel 5, Sonnenbrille 7, Umhang 8,
+  Medaille 9, Krone 10), damit es auch zwischen 7 und 9 sichtbar
+  weiterwächst. Der Booster (0–10) ist ein gewichteter Schnitt der
+  letzten 14 Tage: 10 Übungen oder Pilates = voller Tag, weniger zählt
+  anteilig, Cycling und Gehen geben einen Bonus. Pausen lassen den
+  Muskel wieder schrumpfen. Bei „Bewegung reduzieren“ steht das
+  Männchen still
 - **Symbole und Serien:** Jede Übung hat ein eigenes Symbol, farbig nach
   Mobilisieren, Dehnen, Kräftigen und Workout. Eine Flamme zeigt, wie
   viele Tage am Stück eine Übung gemacht wurde (⏳ = heute noch

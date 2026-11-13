@@ -263,9 +263,7 @@
   }
 
   /* Booster */
-  .booster { display: flex; align-items: center; gap: 16px; }
-  .booster .figure { flex-shrink: 0; width: 124px; height: 132px; }
-  .booster .figure svg { width: 100%; height: 100%; overflow: hidden; }
+  .booster { display: block; }
   .booster .trend { font-size: 0.78rem; font-weight: 600; margin-top: 6px; color: var(--muted); }
   .booster .trend.up { color: var(--green); }
   .booster .trend.down { color: #d0613c; }
@@ -292,80 +290,37 @@
     margin-top: 6px;
   }
   .booster-hint { color: var(--muted); font-size: 0.75rem; margin-top: 12px; }
-  /* Comic-Booster-Männchen */
-  :root {
-    --bf-ink: #15261f;
-    --bf-skin: #46c793;
-    --bf-band: #e5484d;
-    --bf-shorts: #2f62c0;
-    --bf-gold: #f5b82e;
+  /* Booster-Bühne */
+  .bf-stage { position: relative; margin: 4px -8px 6px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .bf-stage svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .bf-floor { stroke: var(--line); stroke-width: 2; stroke-linecap: round; }
+  .bf-shadow { fill: #15261f; opacity: 0.13; }
+  .bf-bubble {
+    position: absolute;
+    transform: translate(0, -100%);
+    max-width: 62%;
+    background: #fff;
+    color: #15261f;
+    border: 2.5px solid #15261f;
+    border-radius: 16px 16px 16px 4px;
+    padding: 6px 11px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.3;
+    box-shadow: 3px 3px 0 rgba(21, 38, 31, 0.18);
+    pointer-events: none;
+    z-index: 2;
   }
-  .bf-body, .bf-skin-fill { fill: var(--bf-skin); stroke: var(--bf-ink); stroke-width: 3.5; stroke-linejoin: round; }
-  .bf-skin-fill { stroke: none; }
-  .bf-ink-fill { fill: var(--bf-ink); }
-  .bf-ink-stroke, .bf-skin-stroke { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-  .bf-ink-stroke { stroke: var(--bf-ink); }
-  .bf-skin-stroke { stroke: var(--bf-skin); }
-  .bf-detail { fill: none; stroke: var(--bf-ink); stroke-width: 2.2; stroke-linecap: round; opacity: 0.55; }
-  .bf-abs { stroke-width: 1.8; }
-  .bf-shine { fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; opacity: 0.7; }
-  .bf-shorts { fill: var(--bf-shorts); stroke: var(--bf-ink); stroke-width: 3; stroke-linejoin: round; }
-  .bf-shoe { fill: #fff; stroke: var(--bf-ink); stroke-width: 3; }
-  .bf-shoe-stripe { stroke: var(--bf-band); stroke-width: 2.4; stroke-linecap: round; }
-  .bf-band { fill: var(--bf-band); stroke: var(--bf-ink); stroke-width: 2.6; stroke-linejoin: round; }
-  .bf-line { fill: none; stroke: var(--bf-ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-  .bf-line.bf-thin { stroke-width: 1.6; }
-  .bf-line.bf-bold { stroke-width: 3.2; }
-  .bf-eye { fill: #fff; stroke: var(--bf-ink); stroke-width: 2; }
-  .bf-pupil { fill: var(--bf-ink); }
-  .bf-glint { fill: #fff; }
-  .bf-cheek { fill: #ff7b8a; opacity: 0.55; }
-  .bf-mouth { fill: #7a1f2b; stroke: var(--bf-ink); stroke-width: 2.4; stroke-linejoin: round; }
-  .bf-teeth { fill: #fff; }
-  .bf-tongue { fill: #ff8a95; }
-  .bf-drop { fill: #8fd3ff; stroke: var(--bf-ink); stroke-width: 1.8; }
-  .bf-spark { fill: var(--bf-gold); stroke: var(--bf-ink); stroke-width: 1.4; stroke-linejoin: round; }
-  .bf-shadow { fill: var(--bf-ink); opacity: 0.14; }
-  .bf-burst { fill: var(--bf-gold); stroke: var(--bf-ink); stroke-width: 2.4; stroke-linejoin: round; }
-  .bf-powtext { font: italic 900 12px -apple-system, "Arial Black", sans-serif; fill: var(--bf-band); stroke: var(--bf-ink); stroke-width: 0.8; paint-order: stroke; }
-
-  /* Bewegung */
-  .bf-bob, .bf-sway, .bf-arm, .bf-head, .bf-tails, .bf-eyes, .bf-spark, .bf-pow, .bf-rays, .bf-shadow, .bf-drop, .bf-bicep {
-    transform-box: view-box;
-  }
-  .bf-bob { animation: bfBob 1.6s ease-in-out infinite; }
-  .bf-sway { animation: bfSway 3.4s ease-in-out infinite; transform-origin: 80px 158px; }
-  .bf-shadow { animation: bfShadow 1.6s ease-in-out infinite; transform-origin: 80px 161px; }
-  .bf-flexarm { animation: bfFlex 1.6s ease-in-out infinite; }
-  .bf-bicep { animation: bfPump 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-  .bf-tails { animation: bfFlutter 0.9s ease-in-out infinite; }
-  .bf-eyes { animation: bfBlink 4.2s infinite; }
-  .bf-spark { animation: bfTwinkle 1.8s ease-in-out infinite; }
-  .bf-drop { animation: bfDrip 2.4s ease-in infinite; }
-  .bf-rays { animation: bfSpin 14s linear infinite; transform-origin: 80px 88px; }
-  .bf-pow { animation: bfPow 1.6s ease-in-out infinite; }
-
-  @keyframes bfBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-  @keyframes bfSway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
-  @keyframes bfShadow { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.88); } }
-  @keyframes bfFlex { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-6deg); } }
-  @keyframes bfPump { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
-  @keyframes bfFlutter { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(14deg); } }
-  @keyframes bfBlink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
-  @keyframes bfTwinkle { 0%, 100% { transform: scale(0.4) rotate(0deg); opacity: 0.2; } 50% { transform: scale(1.1) rotate(45deg); opacity: 1; } }
-  @keyframes bfDrip { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(14px); opacity: 0; } }
-  @keyframes bfSpin { to { transform: rotate(360deg); } }
-  @keyframes bfPow { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.12) rotate(-4deg); } }
-
+  .bf-bubble.left { transform: translate(-100%, -100%); border-radius: 16px 16px 4px 16px; }
+  .bf-bubble.pop { animation: bfPop 0.35s cubic-bezier(0.2, 1.6, 0.4, 1); }
+  @keyframes bfPop { from { opacity: 0; scale: 0.6; } to { opacity: 1; scale: 1; } }
+  .booster .unlock { font-size: 0.78rem; margin-top: 4px; color: var(--muted); }
+  .booster .unlock b { color: var(--text); }
   @media (prefers-color-scheme: dark) {
     .bf-figure { filter: url(#bfSticker); }
     .bf-shadow { fill: #000; opacity: 0.35; }
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    .bf-bob, .bf-sway, .bf-shadow, .bf-flexarm, .bf-bicep, .bf-tails, .bf-eyes, .bf-spark, .bf-drop, .bf-rays, .bf-pow { animation: none; }
-  }
-
+  @media (prefers-reduced-motion: reduce) { .bf-bubble.pop { animation: none; } }
 
   /* Tages-Notizen (Chips) */
   .chips { display: flex; flex-direction: column; gap: 8px; }
@@ -731,13 +686,14 @@
     <div class="card">
       <h2>Dein Booster</h2>
       <div class="booster">
-        <div class="figure" id="boosterFigure"></div>
+        <div class="bf-stage" id="boosterStage" role="img" aria-label="Dein Booster-Männchen"></div>
         <div class="info">
           <div class="level-name" id="boosterName">Aufwärmen</div>
           <div class="streak" id="boosterStreak"></div>
           <div class="booster-bar"><div id="boosterFill"></div></div>
           <div class="bar-label"><span>0</span><span id="boosterValue"></span><span>10</span></div>
           <div class="trend" id="boosterTrend"></div>
+          <div class="unlock" id="boosterUnlock"></div>
         </div>
       </div>
       <div class="booster-hint" id="boosterHint"></div>
@@ -1155,228 +1111,572 @@ function boosterStage(power) {
 }
 
 /* Comic-Booster-Männchen: m = 0 … 1 (Muskelmasse), stage 0 … 4 (Stimmung/Pose), max = Vollausbau */
-function boosterFigureSVG(m, stage, max) {
-  const f = (v) => v.toFixed(1);
-  const cx = 80, shY = 76, waistY = 118;
-  const sh = 17 + m * 19;            // halbe Schulterbreite
-  const waist = 12 + m * 5;          // halbe Taille
-  const armW = 6 + m * 7;            // Armdicke
-  const legW = 9 + m * 6;
-  const headR = 23, headCY = 49;
-  const tired = stage === 0;
-  const P = [];
+/* ===== Booster-Bühne: Comic-Männchen mit Skelett, Posen und Bewegungsabläufen =====
+   Koordinaten der Figur: Ursprung = Boden unter der Körpermitte, y nach unten positiv.
+   Die Bühne ist 320 × 170, der Boden liegt bei y = 158. */
+const BF_STAGE_W = 320, BF_GROUND = 158;
+const BF = {
+  ink: "#15261f", skin: "#46c793", band: "#e5484d", cape: "#c8323a", shorts: "#2f62c0",
+  gold: "#f5b82e", mouth: "#7a1f2b", tongue: "#ff8a95", cheek: "#ff7b8a", drop: "#8fd3ff", glass: "#1b1f24",
+};
+const BF_UNLOCKS = [
+  { at: 3, key: "wrist", name: "Schweißbänder", to: "zu den Schweißbändern" },
+  { at: 5, key: "dumbbell", name: "Hantel 🏋️", to: "zur Hantel 🏋️" },
+  { at: 7, key: "shades", name: "Sonnenbrille 😎", to: "zur Sonnenbrille 😎" },
+  { at: 8, key: "cape", name: "Superhelden-Umhang 🦸", to: "zum Superhelden-Umhang 🦸" },
+  { at: 9, key: "medal", name: "Goldmedaille 🥇", to: "zur Goldmedaille 🥇" },
+  { at: 10, key: "crown", name: "Krone 👑", to: "zur Krone 👑" },
+];
 
-  // Hintergrund: Strahlenkranz beim Vollausbau
-  if (max) {
-    let rays = "";
-    for (let i = 0; i < 12; i++) {
-      const a = (i / 12) * Math.PI * 2, b = a + Math.PI / 12;
-      rays += "M80 88 L" + f(80 + Math.cos(a) * 120) + " " + f(88 + Math.sin(a) * 120) +
-        " L" + f(80 + Math.cos(b) * 120) + " " + f(88 + Math.sin(b) * 120) + " Z ";
-    }
-    P.push('<defs><radialGradient id="bfRayFade" cx="80" cy="88" r="84" gradientUnits="userSpaceOnUse">' +
-      '<stop offset="0" stop-color="#f5b82e" stop-opacity="0.55"/><stop offset="1" stop-color="#f5b82e" stop-opacity="0"/>' +
-      '</radialGradient></defs>');
-    P.push('<g class="bf-rays"><path d="' + rays + '" fill="url(#bfRayFade)"/></g>');
-  }
+const bfN = v => Math.round(v * 10) / 10;
+const bfEase = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const bfLerp = (a, b, k) => a + (b - a) * k;
 
-  // Schatten am Boden
-  P.push('<ellipse class="bf-shadow" cx="80" cy="161" rx="' + f(26 + m * 12) + '" ry="5"/>');
+/* Zwei-Gelenk-Kette (Arm/Bein): von A Richtung T, Längen l1/l2.
+   pref: "out" = Gelenk nach außen, "down" = nach unten, "up" = nach oben */
+function bfIK(A, T, l1, l2, s, pref) {
+  let dx = T[0] - A[0], dy = T[1] - A[1];
+  let d = Math.hypot(dx, dy);
+  const maxD = l1 + l2 - 0.05;
+  if (d > maxD) { dx *= maxD / d; dy *= maxD / d; d = maxD; }
+  d = Math.max(d, 0.5);
+  const a = (l1 * l1 - l2 * l2 + d * d) / (2 * d);
+  const h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+  const mx = A[0] + dx * a / d, my = A[1] + dy * a / d;
+  const px = -dy / d, py = dx / d;
+  const J1 = [mx + h * px, my + h * py], J2 = [mx - h * px, my - h * py];
+  let J;
+  if (pref === "down") J = J1[1] > J2[1] ? J1 : J2;
+  else if (pref === "up") J = J1[1] < J2[1] ? J1 : J2;
+  else J = s * J1[0] > s * J2[0] ? J1 : J2;
+  return [J, [A[0] + dx, A[1] + dy]];
+}
 
-  P.push('<defs><filter id="bfSticker" x="-10%" y="-10%" width="120%" height="120%">' +
-    '<feMorphology in="SourceAlpha" operator="dilate" radius="1.8" result="grow"/>' +
-    '<feFlood class="bf-sticker-color" flood-color="#e8efec"/><feComposite in2="grow" operator="in" result="rim"/>' +
-    '<feMerge><feMergeNode in="rim"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>');
-  P.push('<g class="bf-figure"><g class="' + (tired ? "bf-sway" : "bf-bob") + '">');
+/* Grundpose: alle Werte relativ, Hände relativ zur Schulter (dx nach außen, dy nach unten),
+   Füße relativ zur Ruheposition (dx nach außen, dy nach unten = negativ heißt angehoben) */
+function bfRestPose() {
+  return { x: 0, lift: 0, squat: 0, lean: 0, tilt: 0,
+    hLx: 8, hLy: 42, hRx: 8, hRy: 42, fLx: 0, fLy: 0, fRx: 0, fRy: 0,
+    elL: "out", elR: "out", face: null, prop: null, propHand: 1 };
+}
+const BF_NUMERIC = ["x", "lift", "squat", "lean", "tilt", "hLx", "hLy", "hRx", "hRy", "fLx", "fLy", "fRx", "fRy"];
 
-  // Beine + Schuhe
+/* Zeichnet die Figur in einer Pose. look: { m, stage, items:Set, blink, t, dark } */
+function bfFigureSVG(P, look) {
+  const { m, stage, items, t } = look;
+  const sh = 17 + m * 19, waist = 12 + m * 5, armW = 6 + m * 7, legW = 9 + m * 6;
+  const shY = -82, waistY = -40, headR = 23;
+  const L1 = 21, L2 = 21, T1 = 12.5, T2 = 12.5;
+  const sq = P.squat;
+  const rad = P.lean * Math.PI / 180;
+  const pivot = [0, waistY + sq];
+  const rot = (p) => { const x = p[0] - pivot[0], y = p[1] - pivot[1];
+    return [pivot[0] + x * Math.cos(rad) - y * Math.sin(rad), pivot[1] + x * Math.sin(rad) + y * Math.cos(rad)]; };
+  const rotV = (v) => [v[0] * Math.cos(rad) - v[1] * Math.sin(rad), v[0] * Math.sin(rad) + v[1] * Math.cos(rad)];
+  const pt = p => bfN(p[0]) + " " + bfN(p[1]);
+  const S = [];
+
+  // ---- Beine (nicht mitgedreht) ----
+  const legs = [];
   for (const s of [-1, 1]) {
-    const x1 = cx + s * (waist - 5), x2 = cx + s * (waist - 3 + (tired ? 2 : 0));
-    P.push('<path class="bf-ink-stroke" d="M' + f(x1) + " " + (waistY + 10) + " L" + f(x2) + ' 150" stroke-width="' + f(legW + 5) + '"/>');
-    P.push('<path class="bf-skin-stroke" d="M' + f(x1) + " " + (waistY + 10) + " L" + f(x2) + ' 150" stroke-width="' + f(legW) + '"/>');
-    P.push('<ellipse class="bf-shoe" cx="' + f(x2 + s * 3) + '" cy="153" rx="' + f(10 + m * 2) + '" ry="5.5"/>');
-    P.push('<path class="bf-shoe-stripe" d="M' + f(x2 + s * 3 - 5) + " 151 L" + f(x2 + s * 3 + 5) + ' 151"/>');
+    const hip = [s * (waist - 5), waistY + 10 + sq];
+    const fx = s === -1 ? P.fLx : P.fRx, fy = s === -1 ? P.fLy : P.fRy;
+    const foot = [s * (waist - 3 + fx), -8 + fy];
+    const [knee, F] = bfIK(hip, foot, T1, T2, s, "out");
+    legs.push({ s, hip, knee, F });
   }
-
-  // Rumpf
-  const neckTop = shY - 6 - m * 4;
-  P.push('<path class="bf-body" d="M' + f(cx - sh) + " " + (shY + 4) + " Q" + cx + " " + f(neckTop) + " " + f(cx + sh) + " " + (shY + 4) +
-    " Q" + f(cx + sh + 1) + " " + (shY + 18) + " " + f(cx + waist) + " " + waistY +
-    " L" + f(cx - waist) + " " + waistY + " Q" + f(cx - sh - 1) + " " + (shY + 18) + " " + f(cx - sh) + " " + (shY + 4) + ' Z"/>');
-  // Brust und Bauchmuskeln
-  if (m > 0.3) {
-    const pw = sh * 0.72;
-    P.push('<path class="bf-detail" d="M' + f(cx - pw) + " " + (shY + 14) + " Q" + f(cx - pw / 2) + " " + (shY + 23) + " " + (cx - 2) + " " + (shY + 15) + '"/>');
-    P.push('<path class="bf-detail" d="M' + f(cx + pw) + " " + (shY + 14) + " Q" + f(cx + pw / 2) + " " + (shY + 23) + " " + (cx + 2) + " " + (shY + 15) + '"/>');
-  }
-  if (m > 0.6) {
-    let abs = "M" + cx + " " + (shY + 24) + " L" + cx + " " + (waistY - 5);
-    for (const y of [waistY - 27, waistY - 17]) {
-      abs += " M" + (cx - 9) + " " + (y + 1) + " Q" + (cx - 5.5) + " " + (y - 1.5) + " " + (cx - 2.5) + " " + y +
-        " M" + (cx + 9) + " " + (y + 1) + " Q" + (cx + 5.5) + " " + (y - 1.5) + " " + (cx + 2.5) + " " + y;
-    }
-    P.push('<path class="bf-detail bf-abs" d="' + abs + '"/>');
-  }
-  if (tired) { // kleines Bäuchlein
-    P.push('<path class="bf-detail" d="M' + (cx - 9) + " " + (waistY - 8) + " Q" + cx + " " + (waistY + 1) + " " + (cx + 9) + " " + (waistY - 8) + '"/>');
-  }
-
-  // Shorts
-  P.push('<path class="bf-shorts" d="M' + f(cx - waist - 2) + " " + (waistY - 3) + " L" + f(cx + waist + 2) + " " + (waistY - 3) +
-    " L" + f(cx + waist + 5) + " " + (waistY + 15) + " L" + (cx + 3) + " " + (waistY + 15) + " L" + cx + " " + (waistY + 7) +
-    " L" + (cx - 3) + " " + (waistY + 15) + " L" + f(cx - waist - 5) + " " + (waistY + 15) + ' Z"/>');
-
-  // Arme: Kontur zuerst, dann Füllung – so verschmelzen Arm, Bizeps und Faust
+  // ---- Arme (Schultern drehen mit dem Oberkörper) ----
   const arms = [];
   for (const s of [-1, 1]) {
-    const flex = stage >= 3 || (stage === 2 && s === 1);
-    const S = [cx + s * (sh - 4), shY + 7];
-    let E, H, B, br;
-    if (flex) {
-      E = [cx + s * (sh + 19), shY + 3];
-      H = [cx + s * (sh + 16), shY - 23];
-      B = [cx + s * (sh + 9), shY - 2];
-      br = 4 + m * 8;
-    } else {
-      E = [cx + s * (sh + 5), shY + (tired ? 30 : 27)];
-      H = [cx + s * (sh + (tired ? 2 : 4)), shY + (tired ? 54 : 49)];
-      B = [cx + s * (sh + 2), shY + 15];
-      br = 3 + m * 5;
-    }
-    arms.push({ s, S, E, H, B, br, flex });
+    const Sh = rot([s * (sh - 4), shY + 7 + sq]);
+    const hx = s === -1 ? P.hLx : P.hRx, hy = s === -1 ? P.hLy : P.hRy;
+    const off = rotV([s * hx, hy]);
+    const target = [Sh[0] + off[0], Sh[1] + off[1]];
+    const [E, H] = bfIK(Sh, target, L1, L2, s, s === -1 ? P.elL : P.elR);
+    const reach = Math.hypot(H[0] - Sh[0], H[1] - Sh[1]);
+    const bend = 1 - reach / (L1 + L2);              // 0 gestreckt … ~1 voll gebeugt
+    arms.push({ s, Sh, E, H, bend });
   }
-  const armPath = (a) => "M" + f(a.S[0]) + " " + f(a.S[1]) + " L" + f(a.E[0]) + " " + f(a.E[1]) + " L" + f(a.H[0]) + " " + f(a.H[1]);
+
+  // ---- Umhang (hinter allem, dreht mit) ----
+  const torsoTf = 'transform="translate(0 ' + bfN(sq) + ') rotate(' + bfN(P.lean) + " 0 " + waistY + ')"';
+  if (items.has("cape")) {
+    const w1 = Math.sin(t * 4.2) * 3, w2 = Math.sin(t * 5.1 + 1) * 2.5;
+    S.push("<g " + torsoTf + '><path d="M' + pt([-sh + 3, shY + 2]) + " L" + pt([sh - 3, shY + 2]) +
+      " Q" + pt([sh + 10, -46]) + " " + pt([sh + 12 + w1, -20 + w2]) +
+      " Q" + pt([0, -14 + w2]) + " " + pt([-sh - 12 + w2, -20 + w1]) +
+      " Q" + pt([-sh - 10, -46]) + " " + pt([-sh + 3, shY + 2]) + ' Z" fill="' + BF.cape + '" stroke="' + BF.ink + '" stroke-width="3" stroke-linejoin="round"/></g>');
+  }
+
+  // ---- Beine zeichnen ----
+  for (const g of legs) {
+    const d = "M" + pt(g.hip) + " L" + pt(g.knee) + " L" + pt(g.F);
+    S.push('<path d="' + d + '" fill="none" stroke="' + BF.ink + '" stroke-width="' + bfN(legW + 5) + '" stroke-linecap="round" stroke-linejoin="round"/>');
+    S.push('<path d="' + d + '" fill="none" stroke="' + BF.skin + '" stroke-width="' + bfN(legW) + '" stroke-linecap="round" stroke-linejoin="round"/>');
+    const sx = g.F[0] + g.s * 3, sy = g.F[1] + 3;
+    S.push('<ellipse cx="' + bfN(sx) + '" cy="' + bfN(sy) + '" rx="' + bfN(10 + m * 2) + '" ry="5.5" fill="#fff" stroke="' + BF.ink + '" stroke-width="3"/>');
+    S.push('<path d="M' + bfN(sx - 5) + " " + bfN(sy - 2) + " L" + bfN(sx + 5) + " " + bfN(sy - 2) + '" stroke="' + BF.band + '" stroke-width="2.4" stroke-linecap="round"/>');
+  }
+
+  // ---- Rumpf (dreht um die Taille) ----
+  const neckTop = shY - 6 - m * 4;
+  let torso = "<g " + torsoTf + ">";
+  torso += '<path d="M' + pt([-sh, shY + 4]) + " Q" + pt([0, neckTop]) + " " + pt([sh, shY + 4]) +
+    " Q" + pt([sh + 1, shY + 18]) + " " + pt([waist, waistY]) + " L" + pt([-waist, waistY]) +
+    " Q" + pt([-sh - 1, shY + 18]) + " " + pt([-sh, shY + 4]) + ' Z" fill="' + BF.skin + '" stroke="' + BF.ink + '" stroke-width="3.5" stroke-linejoin="round"/>';
+  const det = 'fill="none" stroke="' + BF.ink + '" stroke-opacity="0.55" stroke-linecap="round"';
+  if (m > 0.3) {
+    const pw = sh * 0.72;
+    torso += '<path ' + det + ' stroke-width="2.2" d="M' + pt([-pw, shY + 14]) + " Q" + pt([-pw / 2, shY + 23]) + " " + pt([-2, shY + 15]) +
+      " M" + pt([pw, shY + 14]) + " Q" + pt([pw / 2, shY + 23]) + " " + pt([2, shY + 15]) + '"/>';
+  }
+  if (m > 0.6) {
+    let abs = "M0 " + (shY + 24) + " L0 " + (waistY - 5);
+    for (const y of [waistY - 27, waistY - 17]) abs += " M-9 " + (y + 1) + " Q-5.5 " + (y - 1.5) + " -2.5 " + y + " M9 " + (y + 1) + " Q5.5 " + (y - 1.5) + " 2.5 " + y;
+    torso += '<path ' + det + ' stroke-width="1.8" d="' + abs + '"/>';
+  }
+  if (stage === 0) torso += '<path ' + det + ' stroke-width="2.2" d="M-9 ' + (waistY - 8) + " Q0 " + (waistY + 1) + " 9 " + (waistY - 8) + '"/>';
+  if (items.has("medal")) {
+    torso += '<path d="M-7 ' + (shY + 3) + " L0 " + (shY + 19) + " L7 " + (shY + 3) + '" fill="none" stroke="' + BF.shorts + '" stroke-width="3.2" stroke-linejoin="round"/>';
+    torso += '<circle cx="0" cy="' + (shY + 23) + '" r="5.5" fill="' + BF.gold + '" stroke="' + BF.ink + '" stroke-width="2"/>';
+    torso += '<path d="M-1.5 ' + (shY + 21) + " L1.5 " + (shY + 21) + " L0 " + (shY + 25.5) + ' Z" fill="#fff" opacity="0.8"/>';
+  }
+  torso += "</g>";
+  S.push(torso);
+
+  // ---- Shorts (sitzen auf der Hüfte) ----
+  S.push('<path transform="translate(0 ' + bfN(sq) + ')" d="M' + bfN(-waist - 2) + " " + (waistY - 3) + " L" + bfN(waist + 2) + " " + (waistY - 3) +
+    " L" + bfN(waist + 5) + " " + (waistY + 15) + " L3 " + (waistY + 15) + " L0 " + (waistY + 7) + " L-3 " + (waistY + 15) +
+    " L" + bfN(-waist - 5) + " " + (waistY + 15) + ' Z" fill="' + BF.shorts + '" stroke="' + BF.ink + '" stroke-width="3" stroke-linejoin="round"/>');
+
+  // ---- Arme: Kontur, dann Füllung ----
   const fistR = armW * 0.6 + 3;
   for (const a of arms) {
-    P.push('<g class="' + (a.flex ? "bf-arm bf-flexarm" : "bf-arm") + '" style="transform-origin:' + f(a.S[0]) + "px " + f(a.S[1]) + 'px">');
-    P.push('<path class="bf-ink-stroke" d="' + armPath(a) + '" stroke-width="' + f(armW + 5) + '"/>');
-    P.push('<circle class="bf-ink-fill" cx="' + f(a.B[0]) + '" cy="' + f(a.B[1]) + '" r="' + f(a.br + 2.5) + '"/>');
-    P.push('<circle class="bf-ink-fill" cx="' + f(a.H[0]) + '" cy="' + f(a.H[1]) + '" r="' + f(fistR + 2.5) + '"/>');
-    P.push('<path class="bf-skin-stroke" d="' + armPath(a) + '" stroke-width="' + f(armW) + '"/>');
-    P.push('<circle class="bf-skin-fill' + (a.flex ? " bf-bicep" : "") + '" cx="' + f(a.B[0]) + '" cy="' + f(a.B[1]) + '" r="' + f(a.br) + '"/>');
-    P.push('<circle class="bf-skin-fill" cx="' + f(a.H[0]) + '" cy="' + f(a.H[1]) + '" r="' + f(fistR) + '"/>');
-    if (a.flex && m > 0.25) { // Glanzlicht auf dem Bizeps
-      P.push('<path class="bf-shine" d="M' + f(a.B[0] - a.s * a.br * 0.35) + " " + f(a.B[1] - a.br * 0.55) +
-        " q" + f(a.s * a.br * 0.3) + " " + f(-a.br * 0.25) + " " + f(a.s * a.br * 0.6) + ' 0"/>');
+    const d = "M" + pt(a.Sh) + " L" + pt(a.E) + " L" + pt(a.H);
+    // Bizeps: wölbt sich nach außen-oben, je stärker der Arm gebeugt ist
+    const mid = [(a.Sh[0] + a.E[0]) / 2, (a.Sh[1] + a.E[1]) / 2];
+    const ux = a.E[0] - a.Sh[0], uy = a.E[1] - a.Sh[1], ul = Math.hypot(ux, uy) || 1;
+    let nx = -uy / ul, ny = ux / ul;
+    if (ny > 0) { nx = -nx; ny = -ny; }                  // Wölbung nach oben
+    const br = (3 + m * 5) + Math.max(0, a.bend) * (2 + m * 6);
+    const B = [mid[0] + nx * br * 0.45, mid[1] + ny * br * 0.45];
+    a.B = B; a.br = br; a.d = d;
+    S.push('<path d="' + d + '" fill="none" stroke="' + BF.ink + '" stroke-width="' + bfN(armW + 5) + '" stroke-linecap="round" stroke-linejoin="round"/>');
+    S.push('<circle cx="' + bfN(B[0]) + '" cy="' + bfN(B[1]) + '" r="' + bfN(br + 2.5) + '" fill="' + BF.ink + '"/>');
+    S.push('<circle cx="' + bfN(a.H[0]) + '" cy="' + bfN(a.H[1]) + '" r="' + bfN(fistR + 2.5) + '" fill="' + BF.ink + '"/>');
+  }
+  for (const a of arms) {
+    S.push('<path d="' + a.d + '" fill="none" stroke="' + BF.skin + '" stroke-width="' + bfN(armW) + '" stroke-linecap="round" stroke-linejoin="round"/>');
+    S.push('<circle cx="' + bfN(a.B[0]) + '" cy="' + bfN(a.B[1]) + '" r="' + bfN(a.br) + '" fill="' + BF.skin + '"/>');
+    S.push('<circle cx="' + bfN(a.H[0]) + '" cy="' + bfN(a.H[1]) + '" r="' + bfN(fistR) + '" fill="' + BF.skin + '"/>');
+    if (a.bend > 0.25 && m > 0.25) {
+      S.push('<path d="M' + bfN(a.B[0] - a.br * 0.35) + " " + bfN(a.B[1] - a.br * 0.5) + " q" + bfN(a.br * 0.35) + " " + bfN(-a.br * 0.28) +
+        " " + bfN(a.br * 0.7) + ' 0" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity="0.7"/>');
     }
-    P.push("</g>");
+    if (items.has("wrist")) {
+      const P1 = [bfLerp(a.E[0], a.H[0], 0.58), bfLerp(a.E[1], a.H[1], 0.58)];
+      const P2 = [bfLerp(a.E[0], a.H[0], 0.78), bfLerp(a.E[1], a.H[1], 0.78)];
+      const band = "M" + pt(P1) + " L" + pt(P2);
+      S.push('<path d="' + band + '" stroke="' + BF.ink + '" stroke-width="' + bfN(armW + 4.5) + '" stroke-linecap="butt"/>');
+      S.push('<path d="' + band + '" stroke="' + BF.band + '" stroke-width="' + bfN(armW + 1.5) + '" stroke-linecap="butt"/>');
+    }
   }
 
-  // Kopf
-  P.push('<g class="bf-head" style="transform-origin:80px 66px;' + (tired ? "transform:rotate(-9deg) translateY(3px)" : "") + '">');
-  P.push('<circle class="bf-body" cx="80" cy="' + headCY + '" r="' + headR + '"/>');
-  // Stirnband mit flatternden Enden
-  const y1 = headCY - 19, y2 = headCY - 12;
-  const w1 = Math.sqrt(headR * headR - 19 * 19), w2 = Math.sqrt(headR * headR - 12 * 12);
-  P.push('<path class="bf-band" d="M' + f(80 - w1) + " " + y1 + " L" + f(80 + w1) + " " + y1 + " L" + f(80 + w2) + " " + y2 + " L" + f(80 - w2) + " " + y2 + ' Z"/>');
-  P.push('<g class="bf-tails" style="transform-origin:' + f(80 - w2 + 1) + "px " + (y1 + 3) + 'px">' +
-    '<path class="bf-band" d="M' + f(80 - w2 + 1) + " " + (y1 + 3) + " q-10 -6 -19 -2 l3 5 q8 -2 16 0 Z\"/>" +
-    '<path class="bf-band" d="M' + f(80 - w2 + 1) + " " + (y1 + 4) + " q-8 4 -16 9 l5 3 q6 -5 11 -9 Z\"/>" +
-    "</g>");
-  P.push('<circle class="bf-band" cx="' + f(80 - w2 + 1) + '" cy="' + (y1 + 3.5) + '" r="3.2"/>');
+  // ---- Kopf ----
+  const headC = rot([0, -109 + sq]);
+  S.push('<g transform="translate(' + pt(headC) + ") rotate(" + bfN(P.lean + P.tilt) + ')">' + bfHeadSVG(P, look) + "</g>");
 
-  // Gesicht
-  const ey = headCY - 1;
-  // Augenbrauen
+  // ---- Gegenstände in der Hand ----
+  const hand = arms[P.propHand === -1 ? 0 : 1].H;
+  if (P.prop === "dumbbell") {
+    S.push('<g transform="translate(' + pt(hand) + ')"><rect x="-11" y="-1.6" width="22" height="3.2" rx="1.5" fill="#6b7570" stroke="' + BF.ink + '" stroke-width="1.4"/>' +
+      '<rect x="-15" y="-6.5" width="6" height="13" rx="2" fill="#3b4642" stroke="' + BF.ink + '" stroke-width="1.6"/>' +
+      '<rect x="9" y="-6.5" width="6" height="13" rx="2" fill="#3b4642" stroke="' + BF.ink + '" stroke-width="1.6"/></g>');
+  } else if (P.prop === "bottle") {
+    S.push('<g transform="translate(' + pt(hand) + ') rotate(-35)"><rect x="-4" y="-15" width="8" height="18" rx="3" fill="' + BF.drop + '" stroke="' + BF.ink + '" stroke-width="1.8"/>' +
+      '<rect x="-2.5" y="-19" width="5" height="4.5" rx="1" fill="#fff" stroke="' + BF.ink + '" stroke-width="1.4"/></g>');
+  }
+  return S.join("");
+}
+
+function bfHeadSVG(P, look) {
+  const { stage, items, blink, t } = look;
+  const face = P.face || ["tired", "neutral", "smile", "grin", "joy"][stage];
+  const ink = BF.ink, S = [];
+  const L = (d, w) => '<path d="' + d + '" fill="none" stroke="' + ink + '" stroke-width="' + (w || 2.6) + '" stroke-linecap="round" stroke-linejoin="round"/>';
+  S.push('<circle r="23" fill="' + BF.skin + '" stroke="' + ink + '" stroke-width="3.5"/>');
+  // Stirnband
+  const y1 = -19, y2 = -12, w1 = Math.sqrt(23 * 23 - 19 * 19), w2 = Math.sqrt(23 * 23 - 12 * 12);
+  S.push('<path d="M' + bfN(-w1) + " " + y1 + " L" + bfN(w1) + " " + y1 + " L" + bfN(w2) + " " + y2 + " L" + bfN(-w2) + " " + y2 +
+    ' Z" fill="' + BF.band + '" stroke="' + ink + '" stroke-width="2.6" stroke-linejoin="round"/>');
+  const kx = -w2 + 1, ky = y1 + 3, flap = Math.sin(t * 7) * 12;
+  S.push('<g transform="rotate(' + bfN(flap) + " " + bfN(kx) + " " + ky + ')"><path d="M' + bfN(kx) + " " + ky + " q-10 -6 -19 -2 l3 5 q8 -2 16 0 Z" +
+    " M" + bfN(kx) + " " + (ky + 1) + ' q-8 4 -16 9 l5 3 q6 -5 11 -9 Z" fill="' + BF.band + '" stroke="' + ink + '" stroke-width="2.6" stroke-linejoin="round"/></g>');
+  S.push('<circle cx="' + bfN(kx) + '" cy="' + (ky + 0.5) + '" r="3.2" fill="' + BF.band + '" stroke="' + ink + '" stroke-width="2.6"/>');
+
+  const ey = -1;
   const brows = {
-    0: "M66 " + (ey - 7) + " L74 " + (ey - 10) + " M94 " + (ey - 7) + " L86 " + (ey - 10),   // traurig
-    1: "M67 " + (ey - 9) + " L75 " + (ey - 9) + " M85 " + (ey - 9) + " L93 " + (ey - 9),
-    2: "M67 " + (ey - 10) + " L75 " + (ey - 9) + " M85 " + (ey - 9) + " L93 " + (ey - 10),
-    3: "M66 " + (ey - 11) + " L75 " + (ey - 7) + " M85 " + (ey - 7) + " L94 " + (ey - 11),   // entschlossen
-    4: "M66 " + (ey - 11) + " Q71 " + (ey - 15) + " 76 " + (ey - 11) + " M84 " + (ey - 11) + " Q89 " + (ey - 15) + " 94 " + (ey - 11),
-  }[stage];
-  P.push('<path class="bf-line" d="' + brows + '"/>');
+    tired: "M-14 -8 L-6 -11 M14 -8 L6 -11", neutral: "M-13 -10 L-5 -10 M5 -10 L13 -10",
+    smile: "M-13 -11 L-5 -10 M5 -10 L13 -11", grin: "M-14 -12 L-5 -8 M5 -8 L14 -12",
+    joy: "M-14 -12 Q-9 -16 -4 -12 M4 -12 Q9 -16 14 -12", effort: "M-14 -12 L-5 -8 M5 -8 L14 -12",
+    wow: "M-13 -14 Q-9 -17 -5 -14 M5 -14 Q9 -17 13 -14", sleep: "M-13 -9 L-5 -9 M5 -9 L13 -9",
+    yawn: "M-14 -10 L-5 -12 M5 -12 L14 -10", sip: "M-14 -12 Q-9 -15 -4 -12 M4 -12 Q9 -15 14 -12", happy: "M-14 -12 Q-9 -16 -4 -12 M4 -12 Q9 -16 14 -12",
+  }[face] || "";
+  S.push(L(brows));
   // Augen
-  if (stage === 0) {
-    for (const x of [71, 89]) {
-      P.push('<path class="bf-eye" d="M' + (x - 5) + " " + ey + " A5 5 0 0 0 " + (x + 5) + " " + ey + ' Z"/>');
-      P.push('<circle class="bf-pupil" cx="' + x + '" cy="' + (ey + 2.6) + '" r="1.8"/>');
-      P.push('<path class="bf-line bf-thin" d="M' + (x - 5) + " " + ey + " L" + (x + 5) + " " + ey + '"/>');
-      P.push('<path class="bf-line bf-thin" d="M' + (x - 4) + " " + (ey + 7.5) + " Q" + x + " " + (ey + 9.5) + " " + (x + 4) + " " + (ey + 7.5) + '"/>');
-    }
-  } else if (stage === 4) {
-    for (const x of [71, 89]) {
-      P.push('<path class="bf-line bf-bold" d="M' + (x - 5) + " " + (ey + 2) + " Q" + x + " " + (ey - 5) + " " + (x + 5) + " " + (ey + 2) + '"/>');
+  const shades = items.has("shades") && !["sleep", "yawn", "sip"].includes(face);
+  if (!shades) {
+    for (const x of [-9, 9]) {
+      if (face === "tired") {
+        S.push('<path d="M' + (x - 5) + " " + ey + " A5 5 0 0 0 " + (x + 5) + " " + ey + ' Z" fill="#fff" stroke="' + ink + '" stroke-width="2"/>');
+        S.push('<circle cx="' + x + '" cy="' + (ey + 2.6) + '" r="1.8" fill="' + ink + '"/>' + L("M" + (x - 5) + " " + ey + " L" + (x + 5) + " " + ey, 1.6));
+      } else if (face === "joy" || face === "happy") {
+        S.push(L("M" + (x - 5) + " " + (ey + 2) + " Q" + x + " " + (ey - 5) + " " + (x + 5) + " " + (ey + 2), 3.2));
+      } else if (face === "effort") {
+        const o = x < 0 ? -1 : 1;                       // zusammengekniffen: > <
+        S.push(L("M" + (x + o * 4) + " " + (ey - 3.5) + " L" + (x - o * 3) + " " + ey + " L" + (x + o * 4) + " " + (ey + 3.5), 2.6));
+      } else if (face === "sleep" || face === "yawn" || face === "sip") {
+        S.push(L("M" + (x - 5) + " " + ey + " Q" + x + " " + (ey + 4) + " " + (x + 5) + " " + ey, 2.4));
+      } else {
+        const sy = blink ? 0.12 : 1, ry = face === "wow" ? 6.2 : 5.6;
+        S.push('<ellipse cx="' + x + '" cy="' + ey + '" rx="4.6" ry="' + bfN(ry * sy) + '" fill="#fff" stroke="' + ink + '" stroke-width="2"/>');
+        if (!blink) S.push('<circle cx="' + (x + 0.8) + '" cy="' + (ey + 0.8) + '" r="2.4" fill="' + ink + '"/><circle cx="' + (x + 1.8) + '" cy="' + (ey - 0.6) + '" r="0.9" fill="#fff"/>');
+      }
     }
   } else {
-    P.push('<g class="bf-eyes" style="transform-origin:80px ' + ey + 'px">');
-    for (const x of [71, 89]) {
-      P.push('<ellipse class="bf-eye" cx="' + x + '" cy="' + ey + '" rx="4.6" ry="5.6"/>');
-      P.push('<circle class="bf-pupil" cx="' + (x + 0.8) + '" cy="' + (ey + 0.8) + '" r="2.4"/>');
-      P.push('<circle class="bf-glint" cx="' + (x + 1.8) + '" cy="' + (ey - 0.6) + '" r="0.9"/>');
-    }
-    P.push("</g>");
+    S.push('<path d="M-16 -5 L-2 -5 L-3 3 Q-9 6 -14 3 Z M2 -5 L16 -5 L14 3 Q9 6 3 3 Z" fill="' + BF.glass + '" stroke="' + ink + '" stroke-width="1.8" stroke-linejoin="round"/>');
+    S.push('<path d="M-2 -4 Q0 -6 2 -4" fill="none" stroke="' + ink + '" stroke-width="2"/>');
+    S.push('<path d="M-12 -3 L-9 -1 M6 -3 L9 -1" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity="0.75"/>');
   }
   // Wangen
-  if (stage >= 3) {
-    P.push('<ellipse class="bf-cheek" cx="63" cy="' + (headCY + 7) + '" rx="4.5" ry="2.6"/>');
-    P.push('<ellipse class="bf-cheek" cx="97" cy="' + (headCY + 7) + '" rx="4.5" ry="2.6"/>');
+  if (["grin", "joy", "happy"].includes(face)) {
+    S.push('<ellipse cx="-17" cy="7" rx="4.5" ry="2.6" fill="' + BF.cheek + '" opacity="0.55"/><ellipse cx="17" cy="7" rx="4.5" ry="2.6" fill="' + BF.cheek + '" opacity="0.55"/>');
   }
   // Mund
-  const my = headCY + 10;
-  if (stage === 0) {
-    P.push('<path class="bf-line" d="M73 ' + (my + 3) + " Q80 " + (my - 3) + " 87 " + (my + 3) + '"/>');
-  } else if (stage === 1) {
-    P.push('<path class="bf-line" d="M74 ' + (my - 1) + " Q80 " + (my + 3) + " 86 " + (my - 1) + '"/>');
-  } else if (stage === 2) {
-    P.push('<path class="bf-line" d="M71 ' + (my - 2) + " Q80 " + (my + 6) + " 89 " + (my - 2) + '"/>');
+  const my = 10;
+  if (face === "tired") S.push(L("M-7 " + (my + 3) + " Q0 " + (my - 3) + " 7 " + (my + 3)));
+  else if (face === "neutral") S.push(L("M-6 " + (my - 1) + " Q0 " + (my + 3) + " 6 " + (my - 1)));
+  else if (face === "smile") S.push(L("M-9 " + (my - 2) + " Q0 " + (my + 6) + " 9 " + (my - 2)));
+  else if (face === "effort") {
+    S.push('<rect x="-8" y="' + (my - 3) + '" width="16" height="7" rx="2" fill="#fff" stroke="' + ink + '" stroke-width="2.2"/>');
+    S.push(L("M-8 " + (my + 0.5) + " L8 " + (my + 0.5), 1.4));
+  } else if (face === "wow" || face === "yawn") {
+    const r = face === "yawn" ? 6 : 4.2;
+    S.push('<ellipse cx="0" cy="' + (my + 1) + '" rx="' + bfN(r * 0.8) + '" ry="' + r + '" fill="' + BF.mouth + '" stroke="' + ink + '" stroke-width="2.2"/>');
+  } else if (face === "sleep") S.push(L("M-4 " + (my + 1) + " Q0 " + (my + 3) + " 4 " + (my + 1), 2.2));
+  else if (face === "sip") S.push('<ellipse cx="2" cy="' + (my + 1) + '" rx="2.6" ry="2.2" fill="' + BF.mouth + '" stroke="' + ink + '" stroke-width="2"/>');
+  else {
+    const wide = face === "grin" ? 9 : 12, deep = face === "grin" ? 8 : 12;
+    S.push('<path d="M' + (-wide) + " " + (my - 3) + " Q0 " + (my + deep) + " " + wide + " " + (my - 3) + ' Z" fill="' + BF.mouth + '" stroke="' + ink + '" stroke-width="2.4" stroke-linejoin="round"/>');
+    S.push('<path d="M' + (-wide + 2) + " " + (my - 2.6) + " L" + (wide - 2) + " " + (my - 2.6) + " L" + (wide - 3.5) + " " + (my + 0.8) + " L" + (-wide + 3.5) + " " + (my + 0.8) + ' Z" fill="#fff"/>');
+    if (face !== "grin") S.push('<ellipse cx="0" cy="' + (my + 5) + '" rx="5" ry="2.4" fill="' + BF.tongue + '"/>');
+  }
+  // Krone
+  if (items.has("crown")) {
+    S.push('<path d="M-12 -21 L-13 -33 L-6 -27 L0 -36 L6 -27 L13 -33 L12 -21 Z" fill="' + BF.gold + '" stroke="' + ink + '" stroke-width="2.2" stroke-linejoin="round"/>');
+    S.push('<circle cx="0" cy="-26" r="2" fill="' + BF.band + '"/>');
+  }
+  // Schweiß bei Anstrengung, Zzz beim Schlafen
+  if (face === "effort" || face === "tired") {
+    const p = (t % 1.6) / 1.6;
+    S.push('<path transform="translate(0 ' + bfN(p * 10) + ')" opacity="' + bfN(1 - p) + '" d="M24 -16 C29 -8 29 -4 24 -4 C19 -4 19 -8 24 -16 Z" fill="' + BF.drop + '" stroke="' + ink + '" stroke-width="1.6"/>');
+  }
+  if (face === "sleep") {
+    for (let i = 0; i < 3; i++) {
+      const p = ((t * 0.6 + i / 3) % 1);
+      S.push('<text x="' + bfN(18 + p * 14) + '" y="' + bfN(-20 - p * 26) + '" font-size="' + bfN(8 + p * 6) + '" font-weight="800" fill="' + BF.shorts + '" opacity="' + bfN(1 - p) + '">Z</text>');
+    }
+  }
+  return S.join("");
+}
+
+/* ---- Bewegungsabläufe: Funktion von Fortschritt p (0…1) → Teil-Pose ---- */
+const bfWave = (p, n) => Math.sin(p * n * Math.PI * 2);
+const BF_ACTIONS = {
+  wave:    { dur: 2.6, fn: p => ({ hRx: 14 + bfWave(p, 3) * 7, hRy: -34, elR: "out", face: "happy", tilt: bfWave(p, 1.5) * 4 }) },
+  walk:    { dur: 0, fn: (p, c) => { const ph = p * c.steps * Math.PI;
+             return { x: bfLerp(c.x0, c.x1, p), fLy: -Math.max(0, Math.sin(ph)) * 7, fRy: -Math.max(0, -Math.sin(ph)) * 7,
+               hLx: 8 + Math.sin(ph) * 6, hRx: 8 - Math.sin(ph) * 6, lift: Math.abs(Math.sin(ph)) * 2.5, tilt: Math.sin(ph) * 3 }; } },
+  squat:   { dur: 3.6, fn: p => { const q = (1 - Math.cos(p * 3 * Math.PI * 2)) / 2;
+             return { squat: q * 17, fLx: 5, fRx: 5, hLx: -3, hLy: 15, hRx: -3, hRy: 15, elL: "down", elR: "down", face: q > 0.6 ? "effort" : null }; } },
+  jacks:   { dur: 3.2, fn: p => { const q = (1 - Math.cos(p * 4 * Math.PI * 2)) / 2;
+             return { hLx: bfLerp(8, 16, q), hLy: bfLerp(42, -36, q), hRx: bfLerp(8, 16, q), hRy: bfLerp(42, -36, q),
+               fLx: q * 9, fRx: q * 9, lift: Math.abs(Math.sin(p * 8 * Math.PI)) * 7, face: "happy" }; } },
+  curl:    { dur: 3.6, fn: p => { const q = (1 - Math.cos(p * 3 * Math.PI * 2)) / 2;
+             return { hRx: bfLerp(6, 2, q), hRy: bfLerp(40, 6, q), elR: "down", hLx: 12, hLy: 26, elL: "out",
+               prop: "dumbbell", propHand: 1, face: q > 0.7 ? "effort" : "grin" }; } },
+  stretch: { dur: 4.4, fn: p => { const l = Math.sin(p * Math.PI * 2) * 20; const k = Math.abs(l) / 20;
+             return l > 0 ? { lean: l, hLx: bfLerp(8, -12, k), hLy: bfLerp(42, -36, k), elL: "up" }
+                          : { lean: l, hRx: bfLerp(8, -12, k), hRy: bfLerp(42, -36, k), elR: "up" }; } },
+  flex:    { dur: 3.0, fn: p => { const pump = (1 - Math.cos(p * 3 * Math.PI * 2)) / 2;
+             return { hLx: 19, hLy: -29 + pump * 4, hRx: 19, hRy: -29 + pump * 4, face: "grin", lift: pump * 1.5 }; } },
+  drink:   { dur: 3.2, fn: p => { const k = Math.min(1, Math.sin(p * Math.PI) * 1.6);
+             return { hRx: bfLerp(8, -12, k), hRy: bfLerp(42, -22, k), elR: "down", tilt: -12 * k, prop: "bottle", propHand: 1,
+               face: k > 0.8 ? "sip" : "happy", hLx: 12, hLy: 26 }; } },
+  yawn:    { dur: 3.4, fn: p => { const k = Math.sin(p * Math.PI);
+             return { hLx: bfLerp(8, 6, k), hLy: bfLerp(42, -38, k), hRx: bfLerp(8, 6, k), hRy: bfLerp(42, -38, k), face: k > 0.3 ? "yawn" : "tired", lift: k * 2 }; } },
+  sleep:   { dur: 6.0, fn: p => ({ squat: 4, tilt: 14, face: "sleep", lift: Math.sin(p * 6 * Math.PI) * 0.8 }) },
+  look:    { dur: 2.8, fn: p => ({ tilt: bfWave(p, 1) * 12, x: 0 }) },
+  dance:   { dur: 3.6, fn: p => { const b = p * 6 * Math.PI;
+             return { lean: Math.sin(b) * 9, lift: Math.abs(Math.sin(b)) * 4, hLx: 14, hLy: Math.sin(b) > 0 ? -32 : 30,
+               hRx: 14, hRy: Math.sin(b) > 0 ? 30 : -32, fLy: -Math.max(0, Math.sin(b)) * 5, fRy: -Math.max(0, -Math.sin(b)) * 5, face: "joy" }; } },
+  cheer:   { dur: 1.5, fn: p => ({ lift: Math.sin(p * Math.PI) * 16, hLx: 12, hLy: -36, hRx: 12, hRy: -36, fLy: -3, fRy: -3, face: "joy" }) },
+  victory: { dur: 3.0, fn: p => { const j = Math.abs(Math.sin(p * 2 * Math.PI));
+             return { lift: j * 18, hLx: 12, hLy: -36, hRx: 12, hRy: -36, fLx: j * 4, fRx: j * 4, face: "joy", lean: Math.sin(p * 2 * Math.PI) * 6 }; } },
+};
+
+/* ===== Regie: Bewegungen auswählen, laufen lassen, sprechen, reagieren ===== */
+const bfStage = {
+  el: null, fig: null, fx: null, bubble: null, state: null, reduce: false, visible: false,
+  raf: 0, lastFrame: 0, pose: bfRestPose(), x: 0, action: null, actStart: 0, actDur: 0, actCtx: null,
+  nextAt: 0, lastName: "", bubbleTimer: 0, nextChatAt: 0, lastGreet: -1e9,
+};
+const bfPick = arr => arr[Math.floor(Math.random() * arr.length)];
+const bfNow = () => performance.now() / 1000;
+const bfFmt = v => (Math.round(v * 10) / 10).toFixed(1).replace(".", ",");
+
+function bfInit() {
+  const el = document.getElementById("boosterStage");
+  if (!el) return;
+  bfStage.el = el;
+  bfStage.reduce = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+  el.innerHTML = '<svg viewBox="0 -30 320 200" aria-hidden="true"><defs>' +
+    '<filter id="bfSticker" x="-20%" y="-20%" width="140%" height="140%"><feMorphology in="SourceAlpha" operator="dilate" radius="1.8" result="g"/>' +
+    '<feFlood flood-color="#e8efec"/><feComposite in2="g" operator="in" result="rim"/><feMerge><feMergeNode in="rim"/><feMergeNode in="SourceGraphic"/></feMerge></filter>' +
+    '<radialGradient id="bfRay" r="0.5"><stop offset="0" stop-color="#f5b82e" stop-opacity="0.55"/><stop offset="1" stop-color="#f5b82e" stop-opacity="0"/></radialGradient>' +
+    '</defs><line class="bf-floor" x1="14" x2="306" y1="161.5" y2="161.5"/><g class="bf-fx"></g><g class="bf-figure"></g></svg>' +
+    '<div class="bf-bubble" hidden></div>';
+  bfStage.fig = el.querySelector(".bf-figure");
+  bfStage.fx = el.querySelector(".bf-fx");
+  bfStage.bubble = el.querySelector(".bf-bubble");
+  el.addEventListener("click", () => { if (!bfStage.reduce) { bfPlay(bfStage.state && bfStage.state.stage >= 3 ? "flex" : "wave"); } bfSay(bfChatter()); });
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(entries => {
+      const vis = entries[0].isIntersecting;
+      bfStage.visible = vis;
+      if (vis) { bfGreet(); bfKick(); }
+    }).observe(el);
+  } else { bfStage.visible = true; }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && bfStage.visible) { bfGreet(); bfKick(); } });
+}
+
+function bfGreet() {
+  const t = bfNow();
+  if (t - bfStage.lastGreet < 60 || !bfStage.state) return;
+  bfStage.lastGreet = t;
+  const h = new Date().getHours();
+  const hello = h < 11 ? "Guten Morgen!" : h >= 18 ? "Guten Abend!" : "Hallo!";
+  if (!bfStage.reduce) bfPlay("wave");
+  bfSay(hello + " " + bfPick(["Bereit? 💪", "Schön, dass Du da bist!", "Auf geht's!", bfChatter()]));
+  bfStage.nextChatAt = t + 14 + Math.random() * 8;
+}
+
+function bfChatter() {
+  const s = bfStage.state;
+  if (!s) return "";
+  const c = [];
+  if (s.todayTicks === 0) c.push("Heute schon gedehnt?", "Ich mach mich schon mal warm …", "Komm, ein paar Übungen?", "Mein Bizeps langweilt sich.");
+  else if (!s.todayFull) c.push("Noch " + s.missing + " bis zum vollen Tag!", "Läuft bei uns!", "Weiter so – ich spür's schon!");
+  else c.push("Voller Tag! Ich platze vor Stolz!", "Boooost! 🔥", "Heute bist Du mein Held.");
+  if (s.stage <= 1) c.push("Puh … ich brauch Training 😮‍💨", "Ich bin ganz schlapp …");
+  const next = BF_UNLOCKS.find(u => s.power < u.at);
+  if (next) c.push("Noch " + bfFmt(next.at - s.power) + " Punkte " + next.to + "!");
+  if (s.streak >= 3) c.push(s.streak + " volle Tage in Folge – Wahnsinn!");
+  return bfPick(c);
+}
+
+function bfSay(text, ms) {
+  const b = bfStage.bubble;
+  if (!b || !text) return;
+  b.textContent = text;
+  b.hidden = false;
+  b.classList.remove("pop");
+  void b.offsetWidth;
+  b.classList.add("pop");
+  clearTimeout(bfStage.bubbleTimer);
+  bfStage.bubbleTimer = setTimeout(() => { b.hidden = true; }, ms || 3800);
+  bfPlaceBubble();
+}
+
+function bfPlaceBubble() {
+  const b = bfStage.bubble, el = bfStage.el;
+  if (!b || b.hidden || !el) return;
+  const k = el.clientWidth / 320;
+  const X = 160 + bfStage.pose.x;
+  const right = X < 190;
+  const ax = (X + (right ? 16 : -16)) * k;
+  const ay = (30 + BF_GROUND - bfStage.pose.lift - 132) * k;    // +30: viewBox beginnt bei y = -30
+  b.classList.toggle("left", !right);
+  b.style.left = Math.round(ax) + "px";
+  b.style.top = Math.round(ay) + "px";
+}
+
+function bfPlay(name, ctx) {
+  const A = BF_ACTIONS[name];
+  if (!A) return;
+  const t = bfNow();
+  bfStage.action = name;
+  bfStage.actStart = t;
+  bfStage.actCtx = ctx || {};
+  bfStage.actDur = A.dur || (ctx && ctx.dur) || 2;
+  bfStage.lastName = name;
+  bfKick();
+}
+
+function bfStartRandom() {
+  const s = bfStage.state;
+  const pools = [
+    ["sleep", "yawn", "walk", "look"],
+    ["walk", "yawn", "look", "wave", "stretch"],
+    ["walk", "squat", "stretch", "wave", "jacks", "look"],
+    ["walk", "squat", "jacks", "curl", "flex", "dance", "drink", "stretch"],
+    ["flex", "curl", "jacks", "dance", "squat", "walk", "drink", "flex"],
+  ];
+  let pool = pools[s.stage].filter(n => n !== bfStage.lastName && (n !== "curl" || s.items.has("dumbbell")));
+  // Etwa jede dritte Aktion: über die Bühne laufen (außer direkt nacheinander)
+  const name = bfStage.lastName !== "walk" && Math.random() < 0.35 ? "walk" : bfPick(pool.filter(n => n !== "walk"));
+  if (name === "walk") {
+    const x0 = bfStage.x;
+    let x1 = x0;
+    for (let i = 0; i < 6 && Math.abs(x1 - x0) < 40; i++) x1 = Math.round(Math.random() * 180 - 90);
+    const speed = s.stage === 0 ? 28 : 46;
+    bfPlay("walk", { x0, x1, steps: Math.max(2, Math.round(Math.abs(x1 - x0) / 10)), dur: Math.abs(x1 - x0) / speed + 0.3 });
   } else {
-    const wide = stage === 4 ? 12 : 9, deep = stage === 4 ? 12 : 8;
-    P.push('<path class="bf-mouth" d="M' + (80 - wide) + " " + (my - 3) + " Q80 " + (my + deep) + " " + (80 + wide) + " " + (my - 3) + ' Z"/>');
-    P.push('<path class="bf-teeth" d="M' + (80 - wide + 2) + " " + (my - 2.6) + " L" + (80 + wide - 2) + " " + (my - 2.6) +
-      " L" + (80 + wide - 3.5) + " " + (my + 0.8) + " L" + (80 - wide + 3.5) + " " + (my + 0.8) + ' Z"/>');
-    if (stage === 4) P.push('<ellipse class="bf-tongue" cx="80" cy="' + (my + 5) + '" rx="5" ry="2.4"/>');
+    bfPlay(name);
   }
-  P.push("</g>"); // Kopf
+}
 
-  // Schweißtropfen beim schlappen Männchen
-  if (tired) {
-    P.push('<path class="bf-drop" d="M104 33 C109 41 109 45 104 45 C99 45 99 41 104 33 Z"/>');
+function bfIdlePose(t) {
+  const s = bfStage.state, P = bfRestPose();
+  P.x = bfStage.x;
+  const breath = (1 - Math.cos(t * Math.PI * 2 / 1.6)) / 2;
+  if (s.stage === 0) Object.assign(P, { squat: 3, tilt: -9 + Math.sin(t * Math.PI * 2 / 3.4) * 3, hLx: 5, hLy: 44, hRx: 5, hRy: 44 });
+  else if (s.stage >= 3) Object.assign(P, { hLx: 12, hLy: 26, hRx: 12, hRy: 26, lift: breath * 2 });
+  else P.lift = breath * 3;
+  return P;
+}
+
+function bfKick() {
+  if (bfStage.reduce) { bfRender(0); return; }
+  if (!bfStage.raf && bfStage.visible && !document.hidden) bfStage.raf = requestAnimationFrame(bfFrame);
+}
+
+function bfFrame(ms) {
+  bfStage.raf = 0;
+  if (!bfStage.visible || document.hidden || !bfStage.state) return;
+  const t = ms / 1000;
+  if (t - bfStage.lastFrame < 0.032) { bfStage.raf = requestAnimationFrame(bfFrame); return; }
+  const dt = Math.min(0.1, t - (bfStage.lastFrame || t));
+  bfStage.lastFrame = t;
+
+  if (bfStage.action && t - bfStage.actStart >= bfStage.actDur) {
+    if (bfStage.action === "walk") bfStage.x = bfStage.actCtx.x1;
+    bfStage.action = null;
+    bfStage.nextAt = t + 2.2 + Math.random() * 3;
   }
-  P.push("</g></g>"); // bob + figure
+  if (!bfStage.action && t >= bfStage.nextAt) bfStartRandom();
+  if (t >= bfStage.nextChatAt && bfStage.bubble.hidden) {
+    bfSay(bfChatter());
+    bfStage.nextChatAt = t + 16 + Math.random() * 10;
+  }
 
-  // Funkeln ab Stufe 3
-  if (stage >= 3) {
-    const star = (x, y, r) => "M" + x + " " + (y - r) + " Q" + x + " " + y + " " + (x + r) + " " + y + " Q" + x + " " + y + " " + x + " " + (y + r) +
-      " Q" + x + " " + y + " " + (x - r) + " " + y + " Q" + x + " " + y + " " + x + " " + (y - r) + " Z";
-    const spots = max ? [[22, 46, 7], [138, 104, 5], [20, 112, 5]] : [[22, 46, 7], [140, 30, 6], [138, 104, 5], [20, 112, 5]];
-    spots.forEach(([x, y, r], i) => {
-      P.push('<path class="bf-spark" style="animation-delay:' + (i * 0.35) + "s;transform-origin:" + x + "px " + y + 'px" d="' + star(x, y, r) + '"/>');
+  let target;
+  if (bfStage.action) {
+    const p = Math.min(1, (t - bfStage.actStart) / bfStage.actDur);
+    target = Object.assign(bfRestPose(), { x: bfStage.x }, BF_ACTIONS[bfStage.action].fn(p, bfStage.actCtx));
+  } else {
+    target = bfIdlePose(t);
+  }
+  const k = 1 - Math.exp(-dt * 16);
+  const P = bfStage.pose;
+  for (const key of BF_NUMERIC) P[key] += (target[key] - P[key]) * k;
+  P.face = target.face; P.prop = target.prop; P.propHand = target.propHand; P.elL = target.elL; P.elR = target.elR;
+  bfRender(t);
+  bfStage.raf = requestAnimationFrame(bfFrame);
+}
+
+function bfRender(t) {
+  const s = bfStage.state;
+  if (!s || !bfStage.fig) return;
+  if (bfStage.reduce) bfStage.pose = Object.assign(bfIdlePose(0), s.stage >= 3 ? BF_ACTIONS.flex.fn(0) : {});
+  const P = bfStage.pose;
+  const X = 160 + P.x;
+  const blink = !bfStage.action && (t % 4.2) > 4.06;
+  const look = { m: s.power / 10, stage: s.stage, items: s.items, blink, t };
+  bfStage.fig.innerHTML = '<g transform="translate(' + bfN(X) + " " + bfN(BF_GROUND - P.lift) + ')">' + bfFigureSVG(P, look) + "</g>";
+
+  let fx = "";
+  if (s.max) {
+    let rays = "";
+    for (let i = 0; i < 12; i++) {
+      const a = i / 12 * Math.PI * 2, b = a + Math.PI / 12;
+      rays += "M0 0 L" + bfN(Math.cos(a) * 130) + " " + bfN(Math.sin(a) * 130) + " L" + bfN(Math.cos(b) * 130) + " " + bfN(Math.sin(b) * 130) + " Z ";
+    }
+    fx += '<g transform="translate(' + bfN(X) + ' 88) rotate(' + bfN((t * 26) % 360) + ')"><path d="' + rays + '" fill="url(#bfRay)"/></g>';
+  }
+  const sw = 1 - Math.min(0.5, P.lift / 40);
+  fx += '<ellipse class="bf-shadow" cx="' + bfN(X) + '" cy="161" rx="' + bfN((26 + s.power * 1.2) * sw) + '" ry="' + bfN(5 * sw) + '"/>';
+  if (s.stage >= 3) {
+    [[-62, -112, 7], [62, -128, 6], [60, -52, 5], [-62, -44, 5]].forEach(([dx, dy, r], i) => {
+      const w = (1 - Math.cos((t + i * 0.45) * Math.PI * 2 / 1.8)) / 2, sc = 0.4 + 0.7 * w;
+      const x = X + dx, y = BF_GROUND + dy, rr = r * sc;
+      fx += '<path opacity="' + bfN(0.2 + 0.8 * w) + '" transform="rotate(' + bfN(w * 45) + " " + bfN(x) + " " + bfN(y) + ')" d="M' + bfN(x) + " " + bfN(y - rr) +
+        " Q" + bfN(x) + " " + bfN(y) + " " + bfN(x + rr) + " " + bfN(y) + " Q" + bfN(x) + " " + bfN(y) + " " + bfN(x) + " " + bfN(y + rr) +
+        " Q" + bfN(x) + " " + bfN(y) + " " + bfN(x - rr) + " " + bfN(y) + " Q" + bfN(x) + " " + bfN(y) + " " + bfN(x) + " " + bfN(y - rr) +
+        ' Z" fill="#f5b82e" stroke="#15261f" stroke-width="1.3" stroke-linejoin="round"/>';
     });
   }
-
-  // POW!-Explosion beim Vollausbau
-  if (max) {
-    let burst = "";
-    for (let i = 0; i < 16; i++) {
-      const a = (i / 16) * Math.PI * 2, r = i % 2 ? 13 : 22;
-      burst += (i ? "L" : "M") + f(127 + Math.cos(a) * r * 1.15) + " " + f(23 + Math.sin(a) * r) + " ";
-    }
-    P.push('<g class="bf-pow" style="transform-origin:127px 23px"><path class="bf-burst" d="' + burst + 'Z"/>' +
-      '<text class="bf-powtext" x="127" y="27.5" text-anchor="middle" transform="rotate(10 127 23)">POW!</text></g>');
-  }
-
-  return '<svg viewBox="0 0 160 170" aria-hidden="true">' + P.join("") + "</svg>";
+  bfStage.fx.innerHTML = fx;
+  bfPlaceBubble();
 }
+
+/* Neuer Stand aus der App – löst Reaktionen aus, wenn heute etwas dazukam */
+function bfSetState(s) {
+  const prev = bfStage.state;
+  bfStage.state = s;
+  if (!bfStage.el) bfInit();
+  if (prev) {
+    const gained = BF_UNLOCKS.filter(u => s.items.has(u.key) && !prev.items.has(u.key));
+    if (gained.length) {
+      if (!bfStage.reduce) bfPlay("victory");
+      bfSay("Neu freigeschaltet: " + gained[gained.length - 1].name + "!", 4500);
+    } else if (s.todayFull && !prev.todayFull) {
+      if (!bfStage.reduce) bfPlay("victory");
+      bfSay(bfPick(["VOLLER TAG! 🎉", "Voller Tag – Booooost! 🔥", "Geschafft! Ich bin stolz auf Dich!"]));
+    } else if (s.todayTicks > prev.todayTicks) {
+      if (!bfStage.reduce) bfPlay("cheer");
+      bfSay(bfPick(["+1! 💪", "Jawoll!", "Sauber!", "Mehr davon!", "Das tut dem Rücken gut!", "Noch eine? 😄"]), 2200);
+    }
+  }
+  bfKick();
+}
+
 
 document.getElementById("boosterHint").textContent =
   "Der Booster zeigt, wie regelmäßig Du in den letzten zwei Wochen trainiert hast – die letzten Tage zählen am meisten. " +
   GOOD_MIN + " von " + REQUIRED.length + " Übungen oder Pilates = voller Tag, weniger zählt anteilig, " +
   "Indoor Cycling und Gehen geben einen Bonus. Pausen lassen den Muskel schrumpfen.";
 
-let lastFigure = "";
 function renderBooster() {
   const { power, streak, todayGain, yesterdayChange } = computeBooster();
   const m = power / POWER_MAX;
   const stage = boosterStage(power);
   const max = power >= POWER_MAX;
 
-  // Nur neu zeichnen, wenn sich etwas ändert – sonst springt die Animation
-  const svg = boosterFigureSVG(m, stage, max);
-  if (svg !== lastFigure) {
-    document.getElementById("boosterFigure").innerHTML = svg;
-    lastFigure = svg;
-  }
+  // Stand an die Bühne geben – das Männchen reagiert selbst auf Neues
+  const todayEntry = data[todayKey()];
+  const credit = dayCredit(todayKey());
+  bfSetState({
+    power, stage, max, streak,
+    items: new Set(BF_UNLOCKS.filter(u => power >= u.at).map(u => u.key)),
+    todayTicks: todayEntry && Array.isArray(todayEntry.done) ? todayEntry.done.length : 0,
+    todayFull: credit >= 1,
+    missing: Math.max(1, Math.ceil((1 - credit) * GOOD_MIN - 0.001)),
+  });
+  const next = BF_UNLOCKS.find(u => power < u.at);
+  document.getElementById("boosterUnlock").innerHTML = next
+    ? "🎁 Ab " + next.at + ": <b>" + next.name + "</b> · noch " + bfFmt(next.at - power)
+    : "👑 Alles freigeschaltet – Krone verdient!";
 
   const names = ["Schlappi 😮‍💨", "Aufgewacht", "In Form", "Kraftpaket", "Booster-Modus 💪"];
   document.getElementById("boosterName").textContent = max ? "Maximal-Booster 🔥" : names[stage];
