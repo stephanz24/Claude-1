@@ -55,6 +55,20 @@ final class Store {
     private func load() {
         guard let data = try? Data(contentsOf: fileURL) else { return }
         entries = (try? JSONDecoder().decode([String: DayEntry].self, from: data)) ?? [:]
+        backfillHipMachines()
+    }
+
+    /// Einmalig: Adduktoren- und Abduktoren-Maschine wurden schon je 5-mal gemacht –
+    /// an den letzten 5 Tagen mit Beinpresse (gleiches Studio) nachtragen
+    private func backfillHipMachines() {
+        let flag = "nachtrag-adab"
+        guard !UserDefaults.standard.bool(forKey: flag) else { return }
+        UserDefaults.standard.set(true, forKey: flag)
+        let known = entries.values.contains { $0.done.contains("adduktoren") || $0.done.contains("abduktoren") }
+        guard !known else { return }
+        let days = entries.keys.filter { $0 < "2026-11-20" && entries[$0]?.done.contains("beinpresse") == true }.sorted().suffix(5)
+        for key in days { entries[key]?.done.append(contentsOf: ["adduktoren", "abduktoren"]) }
+        if !days.isEmpty { save() }
     }
 
     private func save() {

@@ -813,6 +813,8 @@ const EXERCISES = [
   { id: "superman",         name: "Superman", hint: "in Bauchlage Arme und Beine gleichzeitig leicht anheben, Blick zum Boden, Nacken lang" },
   { id: "kniebeugen",       name: "Kniebeugen", hint: "Gewicht auf den Fersen, Knie über den Füßen, Rücken gerade" },
   { id: "beinpresse",       name: "Beinpresse", hint: "Rücken und Becken fest an der Lehne, Knie nicht ganz durchstrecken" },
+  { id: "adduktoren",       name: "Adduktoren-Maschine", hint: "Beine gegen den Widerstand zusammendrücken – Innenseite der Oberschenkel, langsam zurück" },
+  { id: "abduktoren",       name: "Abduktoren-Maschine", hint: "Beine gegen den Widerstand auseinanderdrücken – äußere Hüfte und Gesäß, Becken ruhig" },
   { id: "beindrehen_seite", name: "Beindrehen in Seitenlage", hint: "Bein hinten nach oben drehen, mit Thera-Band" },
   { id: "schulterbruecke",  name: "Schulterbrücke" },
   { id: "pilates",          name: "Pilates Workout", workout: true },
@@ -851,6 +853,8 @@ const ICONS = {
   situps:           { cat: "kraft",  head: [9, 7.5], d: "M10 9.8 L12 16 L16.5 12 L19.5 16.5 M9.8 9.5 L7.5 7.5 L8.5 5.5 M3 18.5 L21 18.5" },
   kniebeugen:       { cat: "kraft",  head: [10, 4.5], d: "M10.5 7 L12 12.5 L16 13.5 L15 19.5 M10.5 8.5 L16.5 8.5" },
   beinpresse:       { cat: "kraft",  head: [6.5, 7.5], d: "M7.5 10 L10 15.5 L15 11.5 L18.5 7.5 M4 18.5 L7.5 9.5 M8 11.5 L11.5 11", fill: "M17 4.5 L18.5 3.5 L22.5 9 L21 10 Z" },
+  adduktoren:       { cat: "kraft",  head: [12, 4.5], d: "M12 7 L12 12.5 M12 9 L8.5 11.5 M12 9 L15.5 11.5 M12 12.5 L5.5 14.5 L5.5 20 M12 12.5 L18.5 14.5 L18.5 20", fill: "M11 17.5 L8 15.8 L8 19.2 Z M13 17.5 L16 15.8 L16 19.2 Z" },
+  abduktoren:       { cat: "kraft",  head: [12, 4.5], d: "M12 7 L12 12.5 M12 9 L8.5 11.5 M12 9 L15.5 11.5 M12 12.5 L9.5 14.5 L9.5 20 M12 12.5 L14.5 14.5 L14.5 20", fill: "M3 17.5 L6.2 15.8 L6.2 19.2 Z M21 17.5 L17.8 15.8 L17.8 19.2 Z" },
   beindrehen_seite: { cat: "kraft",  head: [4.5, 14.5], d: "M6.5 15.5 L14 16.5 L20.5 17.5 M14 16.5 L19 11.5 M17.5 7.5 Q21 7.5 21.5 11 M20 10 L21.5 11.5 L22.8 9.8" },
   schulterbruecke:  { cat: "kraft",  head: [4, 16.5], d: "M6 17.5 L13 12 L17 13 L18 18.5 M7 18 L11.5 18.5" },
   pilates:          { cat: "workout", head: [8, 6.5], d: "M9 8.5 L12 15 L19.5 8.5 M9.5 10 L16 7 M5 17.5 L20 17.5" },
@@ -901,6 +905,19 @@ try { data = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { da
     if (cleaned.length !== e.done.length || hadSide) { e.done = cleaned; changed = true; }
   });
   if (changed) save();
+})();
+/* Einmalig: Adduktoren- und Abduktoren-Maschine wurden schon je 5-mal gemacht –
+   an den letzten 5 Tagen mit Beinpresse (gleiches Studio) nachtragen */
+(function backfillHipMachines() {
+  const FLAG = "rueckenfit-nachtrag-adab";
+  try { if (localStorage.getItem(FLAG)) return; } catch (e) { return; }
+  const known = Object.values(data).some(e => e && Array.isArray(e.done) && (e.done.includes("adduktoren") || e.done.includes("abduktoren")));
+  if (!known) {
+    const days = Object.keys(data).filter(k => k < "2026-11-20" && data[k] && Array.isArray(data[k].done) && data[k].done.includes("beinpresse")).sort().slice(-5);
+    days.forEach(k => { data[k].done.push("adduktoren", "abduktoren"); });
+    if (days.length) save();
+  }
+  try { localStorage.setItem(FLAG, "1"); } catch (e) {}
 })();
 function save() { localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
 

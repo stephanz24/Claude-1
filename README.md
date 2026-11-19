@@ -10,7 +10,7 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   Bauchatmung (zuerst), Stretching in die Seite (li + re, Innenseiten
   der Oberschenkel), Streckung des Hüftbeugers (Dehnung), Liegestütze,
   Planke, Seitplanke, Großer Käfer, Sit-ups, Beinheben in Bauchlage, Superman,
-  Kniebeugen, Beinpresse, Beindrehen in Seitenlage (Thera-Band), Schulterbrücke – plus
+  Kniebeugen, Beinpresse, Adduktoren- und Abduktoren-Maschine, Beindrehen in Seitenlage (Thera-Band), Schulterbrücke – plus
   die Workouts
   Pilates, Indoor Cycling und Nordic Walking / Wandern / strammes Gehen
   (mind. 30 Minuten) – Cycling und Gehen zählen als Extra nicht zum
