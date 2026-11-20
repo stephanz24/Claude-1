@@ -27,6 +27,12 @@ installieren kannst. Kein App Store, kein Account, keine Kosten.
   anteilig, Cycling und Gehen geben einen Bonus. Pausen lassen den
   Muskel wieder schrumpfen. Bei „Bewegung reduzieren“ steht das
   Männchen still
+- **Muskel-Karte:** In der Übersicht zeigt ein Körper (vorne und hinten),
+  welche 15 Muskelgruppen Du gerade aufbaust (grün, mind. 2× pro Woche in
+  den letzten 14 Tagen), welche brach liegen (gelb, zuletzt zu selten) und
+  welche vernachlässigt sind (rot schraffiert, kaum trainiert). Berechnet
+  aus den abgehakten Übungen; folgt dem angezeigten Monat. Antippen zeigt,
+  wie oft ein Muskel dran war, womit, und welche Übung hilft
 - **Symbole und Serien:** Jede Übung hat ein eigenes Symbol, farbig nach
   Mobilisieren, Dehnen, Kräftigen und Workout. Eine Flamme zeigt, wie
   viele Tage am Stück eine Übung gemacht wurde (⏳ = heute noch

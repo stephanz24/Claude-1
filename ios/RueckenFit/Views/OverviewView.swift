@@ -26,6 +26,8 @@ struct OverviewView: View {
 
                 ExerciseStatsCard(monthStart: monthStart)
 
+                MuscleMapCard(monthStart: monthStart)
+
                 StatsSection(monthStart: monthStart)
             }
             .padding(.horizontal, 16)

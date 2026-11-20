@@ -656,6 +656,39 @@
   nav button.active { color: var(--green); }
   .view { display: none; }
   .view.active { display: block; }
+
+  /* Muskel-Karte */
+  :root { --body-base: #dde4e1; --mu-good: #0ca30c; --mu-warn: #fab219; --mu-crit: #d03b3b; --mu-hatch: #8a1f1f; }
+  @media (prefers-color-scheme: dark) { :root { --body-base: #33423c; --mu-hatch: #5a1212; } }
+  .mu-head { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 2px; }
+  .mu-head .big { font-size: 2rem; font-weight: 800; line-height: 1; }
+  .mu-head .big small { font-size: 1rem; color: var(--muted); font-weight: 700; }
+  .mu-head .txt { font-size: 0.85rem; color: var(--muted); }
+  .mu-focus { font-size: 0.9rem; font-weight: 600; margin: 4px 0 2px; }
+  .mu-fig { max-width: 360px; margin: 4px auto 0; }
+  .mu-fig svg { width: 100%; height: auto; display: block; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  .mu-fig .base { fill: var(--body-base); }
+  .mu-fig .mu { stroke: var(--body-base); stroke-width: 1.2; stroke-linejoin: round; cursor: pointer; transition: opacity .25s; }
+  .mu-fig .mu.aufbau { fill: var(--mu-good); }
+  .mu-fig .mu.brach { fill: var(--mu-warn); }
+  .mu-fig .mu.vernachlaessigt { fill: url(#muHatch); }
+  .mu-fig .six { stroke: var(--body-base); stroke-width: 1.1; stroke-linecap: round; fill: none; pointer-events: none; }
+  .mu-fig.picked .mu:not(.sel) { opacity: .28; }
+  .mu-fig .view-lbl { font-size: 8px; font-weight: 700; fill: var(--muted); text-anchor: middle; }
+  .mu-fig .grow { animation: mu-in .5s ease-out both; }
+  @keyframes mu-in { from { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .mu-fig .grow { animation: none; } .mu-fig .mu { transition: none; } }
+  .mu-detail { min-height: 3.6em; font-size: 0.85rem; margin: 8px 0 4px; padding: 10px 12px; border-radius: 12px; background: var(--bg); line-height: 1.4; }
+  .mu-detail b { font-size: 0.95rem; }
+  .mu-detail .hint { color: var(--muted); }
+  .mu-ico { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; margin-right: 4px; }
+  .mu-groups { display: grid; gap: 10px; margin-top: 10px; }
+  .mu-group h3 { font-size: 0.85rem; margin: 0 0 4px; display: flex; align-items: center; gap: 2px; }
+  .mu-group h3 span { color: var(--muted); font-weight: 600; margin-left: 4px; }
+  .mu-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .mu-chips button { border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 999px; padding: 4px 10px; font: inherit; font-size: 0.8rem; cursor: pointer; }
+  .mu-chips button.sel { border-color: var(--text); font-weight: 700; }
+  .mu-chips .none { font-size: 0.8rem; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -757,6 +790,17 @@
         <button data-range="all">Insgesamt</button>
       </div>
       <div id="exStats"></div>
+    </div>
+
+    <div class="card">
+      <h2>Deine Muskeln</h2>
+      <div class="sub" id="muSub"></div>
+      <div class="mu-head" id="muHead"></div>
+      <div class="mu-focus" id="muFocus"></div>
+      <div class="mu-fig" id="muFig"></div>
+      <div class="mu-detail" id="muDetail" aria-live="polite"></div>
+      <div class="mu-groups" id="muGroups"></div>
+      <div class="chart-note">Grundlage sind Deine abgehakten Übungen. Ein Trainingstag zählt voll, wenn der Muskel Hauptarbeit leistet; hilft er nur mit, zählt er halb, Dehnen ein Drittel. Im Aufbau = mind. 2× pro Woche in den letzten 14 Tagen.</div>
     </div>
 
     <div class="stats-row">
@@ -1835,6 +1879,7 @@ function renderMonth() {
   renderDayDetail();
   renderChart();
   renderExerciseStats();
+  renderMuscles();
 }
 
 function renderDayDetail() {
@@ -2402,6 +2447,236 @@ function drawExerciseArt(container, rows, stats) {
 
   showTotal(true);
 }
+
+
+/* ---------- Muskel-Karte ---------- */
+const MUSCLES = [
+  { id: "schultern",       name: "Schultern" },
+  { id: "brust",           name: "Brust" },
+  { id: "arme",            name: "Arme (Trizeps)" },
+  { id: "bauch",           name: "Gerader Bauch" },
+  { id: "schraeg",         name: "Seitliche Bauchmuskeln" },
+  { id: "tiefbauch",       name: "Tiefe Bauchmuskeln" },
+  { id: "hueftbeuger",     name: "Hüftbeuger" },
+  { id: "quadrizeps",      name: "Oberschenkel vorne" },
+  { id: "adduktoren",      name: "Oberschenkel innen" },
+  { id: "waden",           name: "Waden" },
+  { id: "oberer_ruecken",  name: "Oberer Rücken" },
+  { id: "unterer_ruecken", name: "Unterer Rücken" },
+  { id: "huefte_aussen",   name: "Hüfte außen" },
+  { id: "gesaess",         name: "Gesäß" },
+  { id: "beinrueckseite",  name: "Oberschenkel hinten" },
+];
+/* Was jede Übung trainiert: 1 = Hauptarbeit, 0,5 = hilft mit, 0,3 = wird gedehnt */
+const MUSCLE_MAP = {
+  transversus:      { tiefbauch: 1 },
+  bauchatmung:      { tiefbauch: 0.5 },
+  stretching_seite: { adduktoren: 0.3, schraeg: 0.3 },
+  hueftbeuger:      { hueftbeuger: 0.3 },
+  liegestuetze:     { brust: 1, arme: 1, schultern: 0.5, bauch: 0.5 },
+  planke:           { bauch: 1, tiefbauch: 1, schultern: 0.5, schraeg: 0.5, gesaess: 0.3 },
+  seitplanke:       { schraeg: 1, huefte_aussen: 0.5, tiefbauch: 0.5, schultern: 0.5 },
+  kaefer:           { tiefbauch: 1, bauch: 0.5, hueftbeuger: 0.5 },
+  situps:           { bauch: 1, hueftbeuger: 0.5, schraeg: 0.5 },
+  beinheben_bauch:  { gesaess: 1, beinrueckseite: 0.5, unterer_ruecken: 0.5 },
+  superman:         { unterer_ruecken: 1, oberer_ruecken: 1, gesaess: 0.5, schultern: 0.5 },
+  kniebeugen:       { quadrizeps: 1, gesaess: 1, beinrueckseite: 0.5, adduktoren: 0.5, waden: 0.3, unterer_ruecken: 0.3 },
+  beinpresse:       { quadrizeps: 1, gesaess: 0.5, beinrueckseite: 0.3, waden: 0.3 },
+  adduktoren:       { adduktoren: 1 },
+  abduktoren:       { huefte_aussen: 1, gesaess: 0.5 },
+  beindrehen_seite: { huefte_aussen: 1, gesaess: 0.5 },
+  schulterbruecke:  { gesaess: 1, beinrueckseite: 1, unterer_ruecken: 0.5 },
+  pilates:          { tiefbauch: 1, bauch: 1, schraeg: 0.5, unterer_ruecken: 0.5, gesaess: 0.5, huefte_aussen: 0.3, adduktoren: 0.3, schultern: 0.3 },
+  cycling:          { quadrizeps: 1, waden: 0.5, gesaess: 0.5, beinrueckseite: 0.5, hueftbeuger: 0.3 },
+  gehen:            { waden: 1, gesaess: 0.5, quadrizeps: 0.5, beinrueckseite: 0.5, hueftbeuger: 0.3, schultern: 0.3, arme: 0.3 },
+  beinheben_hinten: { gesaess: 1, beinrueckseite: 0.5 },
+  beinheben_seite:  { huefte_aussen: 1, gesaess: 0.5 },
+};
+const MU_RECENT = 14, MU_LONG = 60, MU_GOOD = 4, MU_SOME = 1;
+const MU_STATUS = {
+  aufbau:          { label: "Im Aufbau",      text: "mind. 2× pro Woche", color: "var(--mu-good)", glyph: '<path d="M4.5 8.3 L7 10.6 L11.5 5.6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' },
+  brach:           { label: "Liegt brach",    text: "zuletzt zu selten",  color: "var(--mu-warn)", glyph: '<path d="M4.5 8 L11.5 8" stroke="#0b0b0b" stroke-width="2" stroke-linecap="round"/>' },
+  vernachlaessigt: { label: "Vernachlässigt", text: "kaum trainiert",     color: "var(--mu-crit)", glyph: '<path d="M8 4.3 L8 9" stroke="#fff" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11.8" r="1.2" fill="#fff"/>' },
+};
+const MU_ORDER = ["aufbau", "brach", "vernachlaessigt"];
+function muIcon(st) {
+  return '<svg class="mu-ico" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="8" fill="' + MU_STATUS[st].color + '"/>' + MU_STATUS[st].glyph + "</svg>";
+}
+
+/* Körper: nur linke Bildhälfte (x < 50), wird an x = 50 gespiegelt. Nur absolute M/L/Q/Z – die iPhone-App liest dieselben Pfade. */
+const BODY_BASE = [
+  "M50 3 Q40 3 39.5 15 Q40 26 46 28 L46 35 L50 35 Z",
+  "M50 33 L50 126 L33.5 126 Q32 116 35 104 Q34 86 32.5 66 Q28 61 25 62 Q21 54 23.5 44 Q28 38 42 34.5 Z",
+  "M24 44 Q19 48 19 60 Q17 74 17 88 Q14.5 104 13.5 122 Q11 128 12 138 Q14 141 16.5 138 Q17 130 18.5 123 Q23 106 25 90 Q29 74 30 60 Z",
+  "M33.5 118 Q31 140 33.5 166 Q33.5 188 36.5 208 L34 217 Q40 219 46 217 L45 206 Q47.5 188 46 168 Q48.6 146 48.6 126 L50 122 L50 118 Z",
+];
+const BODY_MUSCLES = {
+  front: [
+    ["schultern", "M30 40 Q22.5 41 21.5 51 Q21.5 58 24.5 62 Q28 52 34.5 47 Q34 42 30 40 Z"],
+    ["brust", "M36 44.5 Q43 42.5 49.3 44.5 L49.3 61 Q41 66 34 61.5 Q31 54 36 44.5 Z"],
+    ["arme", "M22.5 64 Q26 60.5 29.2 62.5 Q29.5 75 26.5 87 Q22.5 89 19.8 86.5 Q19.3 74 22.5 64 Z"],
+    ["bauch", "M43.2 64.5 Q46.5 63.5 49.3 64 L49.3 95 Q46 96.5 43.2 95 Z"],
+    ["schraeg", "M34.3 65 Q38.5 63.5 41.8 66.5 L41.8 95 Q38.5 99 35.3 104 Q33.6 88 34.3 65 Z"],
+    ["tiefbauch", "M38 101 Q43 97.5 49.3 97.5 L49.3 110.5 Q43 111 39.5 108 Z"],
+    ["hueftbeuger", "M35.6 108 Q39.5 110.5 45 113.5 L43.6 124 Q38.8 120.5 35 115 Z"],
+    ["quadrizeps", "M34.6 121 Q39 118.5 43.2 126 Q45.6 145 43.8 163 Q39.5 167 36 162.5 Q33 143 34.6 121 Z"],
+    ["adduktoren", "M44.6 118.5 Q47.6 120 48.2 123.5 Q48 138 46.6 151 Q45 152 44.6 147 Q45.4 133 44.6 118.5 Z"],
+    ["waden", "M36.2 172 Q40 168.5 42.6 172.5 Q43.8 187 41 201 Q37.8 200 36.8 189 Q35.4 179 36.2 172 Z"],
+  ],
+  back: [
+    ["oberer_ruecken", "M45 30 L49.3 29.5 L49.3 69 Q43 61 37.5 50.5 Q34 45 30.5 42.5 Q38.5 38.5 45 30 Z"],
+    ["schultern", "M30 40 Q22.5 41 21.5 51 Q21.5 58 24.5 62 Q28 52 34.5 47 Q34 42 30 40 Z"],
+    ["arme", "M22.5 64 Q26 60.5 29.2 62.5 Q29.5 75 26.5 87 Q22.5 89 19.8 86.5 Q19.3 74 22.5 64 Z"],
+    ["oberer_ruecken", "M34 53 Q38.5 60.5 42.3 70 L42.3 88 Q37.5 90.5 34.3 85 Q32 69 34 53 Z"],
+    ["unterer_ruecken", "M43.6 72 Q46 72.5 49.3 73 L49.3 104 Q46 105.5 43.4 103 Q42.8 88 43.6 72 Z"],
+    ["huefte_aussen", "M34.3 92 Q38.5 91.5 42 95.5 L41.6 104 Q37.5 104.5 34.6 108 Q33.4 100 34.3 92 Z"],
+    ["gesaess", "M35 110 Q42 104.5 49.3 108 L49.3 127 Q42 133 35.3 128 Q32.6 118 35 110 Z"],
+    ["beinrueckseite", "M35.2 134 Q41.5 136.5 47.6 134 Q47.6 150 45.4 162 Q40.5 165.5 37 162 Q33.8 148 35.2 134 Z"],
+    ["waden", "M36.2 170 Q41 166 45 170 Q46 182 43 194 Q39.2 196 37.4 192 Q34.6 181 36.2 170 Z"],
+  ],
+};
+const BODY_SIXPACK = "M43.2 74.5 L49.3 74.5 M43.2 84.5 L49.3 84.5";
+
+/* Stand: Ende des angezeigten Monats, höchstens heute */
+function muscleRefDate() {
+  const now = new Date(); now.setHours(12, 0, 0, 0);
+  const end = new Date(calYear, calMonth + 1, 0, 12);
+  return end < now ? end : now;
+}
+function muscleReport() {
+  const ref = muscleRefDate();
+  const res = {};
+  MUSCLES.forEach(m => { res[m.id] = { recent: 0, long: 0, by: {} }; });
+  for (let i = 0; i < MU_LONG; i++) {
+    const d = new Date(ref); d.setDate(d.getDate() - i);
+    const e = data[dateKey(d)];
+    if (!e || !Array.isArray(e.done) || !e.done.length) continue;
+    const day = {};
+    e.done.forEach(id => {
+      const map = MUSCLE_MAP[id];
+      if (!map) return;
+      Object.keys(map).forEach(mid => {
+        day[mid] = (day[mid] || 0) + map[mid];
+        if (i < MU_RECENT && map[mid] >= 0.5) res[mid].by[id] = (res[mid].by[id] || 0) + 1;
+      });
+    });
+    Object.keys(day).forEach(mid => {
+      const v = Math.min(1, day[mid]);
+      res[mid].long += v;
+      if (i < MU_RECENT) res[mid].recent += v;
+    });
+  }
+  MUSCLES.forEach(m => {
+    const r = res[m.id];
+    r.status = r.recent >= MU_GOOD ? "aufbau" : (r.recent < MU_SOME && r.long < MU_GOOD ? "vernachlaessigt" : "brach");
+  });
+  return { ref, res };
+}
+function muExerciseName(id) {
+  const ex = EXERCISES.find(x => x.id === id);
+  return ex ? ex.name : (LEGACY_EXERCISES[id] || id);
+}
+/* Passende Übung für einen Muskel: höchste Wirkung, Pflicht-Übungen vor Workouts */
+function muBestExercise(mid) {
+  let best = null, score = 0;
+  EXERCISES.forEach(ex => {
+    const w = (MUSCLE_MAP[ex.id] || {})[mid] || 0;
+    const sc = w - (ex.workout ? 0.05 : 0);
+    if (w >= 0.5 && sc > score) { best = ex; score = sc; }
+  });
+  return best;
+}
+function muFmt(v) { return (Math.round(v * 10) / 10).toString().replace(".", ","); }
+function muDays(v) { return muFmt(v) + (Math.abs(v - 1) < 0.05 ? " Trainingstag" : " Trainingstage"); }
+
+let muSelected = null, muLastSig = "", muLastReport = null;
+function renderMuscles() {
+  const rep = muscleReport();
+  muLastReport = rep;
+  const { ref, res } = rep;
+  const isToday = dateKey(ref) === todayKey();
+  document.getElementById("muSub").textContent = (isToday ? "Stand heute" : "Stand " + ref.getDate() + ". " + MONTHS[ref.getMonth()] + " " + ref.getFullYear()) +
+    " – welche Muskeln Du aufbaust und welche zu kurz kommen · tippe einen Muskel an";
+
+  const counts = { aufbau: 0, brach: 0, vernachlaessigt: 0 };
+  MUSCLES.forEach(m => counts[res[m.id].status]++);
+  const n = MUSCLES.length;
+  document.getElementById("muHead").innerHTML = '<div class="big">' + counts.aufbau + "<small> / " + n + '</small></div><div class="txt">Muskelgruppen im Aufbau</div>';
+
+  const focus = MUSCLES.filter(m => res[m.id].status !== "aufbau")
+    .sort((a, b) => (res[a.id].status === "vernachlaessigt" ? 0 : 1) - (res[b.id].status === "vernachlaessigt" ? 0 : 1) || res[a.id].recent - res[b.id].recent)
+    .slice(0, 2);
+  let focusHTML;
+  if (!focus.length) {
+    focusHTML = "🔥 Ganzkörper-Booster! Alle Muskelgruppen sind im Aufbau.";
+  } else {
+    const tips = [];
+    focus.forEach(m => { const ex = muBestExercise(m.id); if (ex && !tips.includes(ex.name)) tips.push(ex.name); });
+    focusHTML = "🎯 Nächster Fokus: " + focus.map(m => m.name).join(" und ") + (tips.length ? " – Tipp: " + tips.join(" oder ") : "");
+    if (counts.aufbau >= n - 2) focusHTML = "💪 Fast alles im Aufbau! " + focusHTML.slice(3);
+  }
+  document.getElementById("muFocus").textContent = focusHTML;
+
+  const sig = dateKey(ref) + "|" + MUSCLES.map(m => res[m.id].status).join(",");
+  const fig = document.getElementById("muFig");
+  if (sig !== muLastSig || !fig.childElementCount) {
+    muLastSig = sig;
+    const both = (d, attrs) => '<path ' + attrs + ' d="' + d + '"/><path ' + attrs + ' transform="matrix(-1 0 0 1 100 0)" d="' + d + '"/>';
+    let h = '<svg viewBox="0 0 212 236" role="img" aria-label="Körper vorne und hinten, Muskeln nach Trainingsstand eingefärbt – Liste darunter">' +
+      '<defs><pattern id="muHatch" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">' +
+      '<rect width="4" height="4" fill="var(--mu-crit)"/><line x1="0" y1="0" x2="0" y2="4" stroke="var(--mu-hatch)" stroke-width="1.6"/></pattern></defs>';
+    [["front", "Vorne"], ["back", "Hinten"]].forEach(([view, label], vi) => {
+      h += '<g transform="translate(' + (vi * 108 + 3) + ' 4)">';
+      h += BODY_BASE.map(d => both(d, 'class="base"')).join("");
+      BODY_MUSCLES[view].forEach(([mid, d], i) => {
+        h += '<g class="grow" style="animation-delay:' + (i * 45 + vi * 200) + 'ms">' + both(d, 'class="mu ' + res[mid].status + '" data-m="' + mid + '"') + "</g>";
+      });
+      if (view === "front") h += both(BODY_SIXPACK, 'class="six"');
+      h += '<text class="view-lbl" x="50" y="230">' + label + "</text></g>";
+    });
+    fig.innerHTML = h + "</svg>";
+  }
+
+  document.getElementById("muGroups").innerHTML = MU_ORDER.map(st => {
+    const list = MUSCLES.filter(m => res[m.id].status === st);
+    return '<div class="mu-group"><h3>' + muIcon(st) + MU_STATUS[st].label + "<span>" + list.length + " · " + MU_STATUS[st].text + '</span></h3><div class="mu-chips">' +
+      (list.length ? list.map(m => '<button data-m="' + m.id + '">' + m.name + "</button>").join("") : '<span class="none">keine</span>') + "</div></div>";
+  }).join("");
+  muShowDetail();
+}
+function muShowDetail() {
+  const box = document.getElementById("muDetail");
+  const fig = document.getElementById("muFig");
+  fig.classList.toggle("picked", !!muSelected);
+  fig.querySelectorAll(".mu").forEach(p => p.classList.toggle("sel", p.dataset.m === muSelected));
+  document.querySelectorAll("#muGroups button").forEach(b => b.classList.toggle("sel", b.dataset.m === muSelected));
+  if (!muSelected || !muLastReport) {
+    box.innerHTML = '<span class="hint">Tippe einen Muskel oder einen Namen an – dann siehst Du, wie oft er zuletzt dran war und womit.</span>';
+    return;
+  }
+  const m = MUSCLES.find(x => x.id === muSelected);
+  const r = muLastReport.res[muSelected];
+  const by = Object.keys(r.by).sort((a, b) => r.by[b] - r.by[a]).slice(0, 4).map(muExerciseName);
+  let h = "<b>" + muIcon(r.status) + m.name + "</b> – " + MU_STATUS[r.status].label + "<br>" +
+    muDays(r.recent) + " in den letzten " + MU_RECENT + " Tagen (Ziel: " + MU_GOOD + ") · " + muFmt(r.long) + " in " + MU_LONG + " Tagen";
+  if (by.length) h += '<br><span class="hint">Trainiert durch: ' + by.join(", ") + "</span>";
+  if (r.status !== "aufbau") {
+    const ex = muBestExercise(muSelected);
+    if (ex) h += "<br>💡 Tipp: " + ex.name;
+  }
+  box.innerHTML = h;
+}
+document.getElementById("muFig").addEventListener("click", ev => {
+  const p = ev.target.closest(".mu");
+  muSelected = p && p.dataset.m !== muSelected ? p.dataset.m : null;
+  muShowDetail();
+});
+document.getElementById("muGroups").addEventListener("click", ev => {
+  const b = ev.target.closest("button[data-m]");
+  if (!b) return;
+  muSelected = b.dataset.m === muSelected ? null : b.dataset.m;
+  muShowDetail();
+});
 
 document.getElementById("exRangeTabs").addEventListener("click", (ev) => {
   const b = ev.target.closest("[data-range]");
