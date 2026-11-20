@@ -54,9 +54,9 @@ enum Muscles {
     ]
 
     static let recentDays = 14
-    static let longDays = undefined
-    static let good = undefined
-    static let some = undefined
+    static let longDays = 60
+    static let good = 4.0
+    static let some = 1.0
 
     /// Körper: nur linke Bildhälfte (x < 50), wird an x = 50 gespiegelt
     static let bodyBase: [String] = [
